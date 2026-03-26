@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>教师端 - 明舟教育背单词系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #f5f7fa;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: #2b85ff;
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .back-home {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: white;
+            color: #2b85ff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .box-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #2b85ff;
+            color: white;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn-green {
+            background: #07c160;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>👨‍🏫 教师管理端</h1>
+        <a href="index.html" class="back-home">← 返回首页</a>
+    </div>
+
+    <div class="box">
+        <div class="box-title">1. 创建学生账号</div>
+        <input type="text" id="stuAccount" placeholder="输入学生账号">
+        <input type="password" id="stuPwd" placeholder="输入学生密码">
+        <button class="btn" onclick="createStudent()">创建账号</button>
+    </div>
+
+    <div class="box">
+        <div class="box-title">2. 分配单词（英文|中文）</div>
+        <textarea id="wordContent" rows="5" placeholder="例如：apple|苹果\nbanana|香蕉"></textarea>
+        <input type="text" id="toStudent" placeholder="分配给学生账号">
+        <button class="btn btn-green" onclick="sendWordToStudent()">分配单词</button>
+    </div>
+
+<script>
+    // 学生账号存储
+    function createStudent() {
+        let account = document.getElementById('stuAccount').value;
+        let pwd = document.getElementById('stuPwd').value;
+        if(!account || !pwd) { alert('请填写完整'); return; }
+        
+        let list = JSON.parse(localStorage.getItem('studentAccountList') || '[]');
+        list.push({account,pwd});
+        localStorage.setItem('studentAccountList', JSON.stringify(list));
+        alert('创建成功！');
+    }
+
+    // 分配单词
+    function sendWordToStudent() {
+        let content = document.getElementById('wordContent').value;
+        let student = document.getElementById('toStudent').value;
+        if(!content || !student) { alert('请填写完整'); return; }
+        
+        let words = content.split('\n').map(item=>{
+            let [w,m] = item.split('|');
+            return {w,m,sentence:`This is ${w}.`};
+        }).filter(i=>i.w&&i.m);
+
+        let data = JSON.parse(localStorage.getItem('studentWordData') || '{}');
+        data[student] = words;
+        localStorage.setItem('studentWordData', JSON.stringify(data));
+        alert('单词分配成功！');
+    }
+</script>
+</body>
+</html>
