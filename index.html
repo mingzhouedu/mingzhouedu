@@ -2,19 +2,17 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>小学英语趣味背单词 - 农场宠物版</title>
+    <title>明舟教育 - 小学英语背单词系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 引入米芾行楷字体 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kaiti@1.0.0/mifu-xingkai.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "MiFu XingKai", "米芾行楷", Arial, sans-serif !important;
+            font-family: Arial, sans-serif;
         }
         body {
-            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -23,37 +21,32 @@
             padding: 20px;
         }
         .title {
-            font-size: 36px;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            margin-bottom: 40px;
+            font-size: 32px;
+            color: white;
+            margin-bottom: 50px;
             text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .card-box {
+        .card {
             background: white;
-            padding: 50px 40px;
+            padding: 40px;
             border-radius: 20px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             text-align: center;
-            max-width: 500px;
+            max-width: 400px;
             width: 100%;
         }
-        .subtitle {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
         .btn {
+            display: block;
+            width: 100%;
             padding: 20px;
+            margin: 15px 0;
             border: none;
             border-radius: 12px;
-            font-size: 20px;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
+            text-decoration: none;
             transition: 0.3s;
         }
         .btn-teacher {
@@ -68,22 +61,14 @@
             transform: translateY(-3px);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .tip {
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
-        }
     </style>
 </head>
 <body>
-    <h1 class="title">🐾 趣味背单词 · 农场宠物养成</h1>
-    <div class="card-box">
-        <h2 class="subtitle">选择登录身份</h2>
-        <div class="btn-group">
-            <button class="btn btn-teacher" onclick="location.href='teacher.html'">👨‍🏫 教师管理端</button>
-            <button class="btn btn-student" onclick="location.href='student.html'">📖 学生学习端</button>
-        </div>
-        <p class="tip">背单词赚牧草·养宠物，快乐学习不枯燥！</p>
+    <h1 class="title">🐾 明舟教育 趣味背单词</h1>
+    <div class="card">
+        <!-- 标准超链接跳转，网页设计核心写法 -->
+        <a href="teacher.html" class="btn btn-teacher">👨‍🏫 教师管理端</a>
+        <a href="student.html" class="btn btn-student">📖 学生学习端</a>
     </div>
 </body>
 </html>
