@@ -2,314 +2,383 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>学生端 - 明舟教育</title>
+    <title>明舟教育 - 学生端</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:SimSun,宋体,sans-serif;}
-        body{background:#E1F1FF;max-width:900px;margin:0 auto;padding:10px;}
-        
-        /* 登录面板 - 简洁保留 */
-        .login{background:#FFF;border:3px solid #6B99C9;border-radius:8px;padding:40px;text-align:center;margin-top:80px;}
-        .login h2{color:#18569F;margin-bottom:20px;}
-        .login input{width:100%;padding:10px;margin:10px 0;border:1px solid #6B99C9;}
-        .login button{padding:10px 30px;background:#18569F;color:#FFF;border:none;cursor:pointer;}
-        .tip{color:red;margin-top:10px;display:none;}
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", serif;
+        }
+        body {
+            background: #e1f1ff;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        /* 登录 */
+        .login {
+            background: white;
+            border: 4px solid #6b99c9;
+            padding: 40px;
+            text-align: center;
+            margin-top: 80px;
+            border-radius: 8px;
+        }
+        .login h2 {
+            color: #18569f;
+            margin-bottom: 20px;
+        }
+        .login input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #6b99c9;
+        }
+        .login button {
+            padding: 10px 30px;
+            background: #18569f;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
         /* 主界面 */
-        .main{display:none;}
-        .main-title{background:#6B99C9;color:#FFF;padding:10px;text-align:center;font-size:20px;font-weight:bold;border:2px solid #18569F;}
-        .resource{display:flex;justify-content:center;gap:40px;background:#C6E2FF;padding:8px;border:1px solid #6B99C9;margin:10px 0;}
-        .main-menu{display:flex;flex-direction:column;gap:10px;margin-bottom:10px;}
-        .main-menu button{padding:15px;background:#FFF;border:2px solid #6B99C9;font-size:16px;cursor:pointer;}
-        
+        .main {
+            display: none;
+        }
+        .main-title {
+            background: #6b99c9;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border: 2px solid #18569f;
+        }
+        .resource {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            background: #c6e2ff;
+            padding: 8px;
+            border: 1px solid #6b99c9;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .main-btn {
+            width: 100%;
+            padding: 15px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #6b99c9;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
         /* 阅读页面 */
-        .read-page{display:none;}
-        .back-btn{padding:8px 16px;background:#6B99C9;color:#FFF;border:none;cursor:pointer;margin-bottom:10px;}
-        .read-box{background:#FFF;border:2px solid #6B99C9;padding:20px;}
-        .read-box h3{text-align:center;color:#18569F;margin-bottom:15px;}
-        .select-bar{display:flex;gap:10px;margin-bottom:15px;}
-        .select-bar select,.select-bar button{flex:1;padding:8px;border:1px solid #6B99C9;}
-        .select-bar button{background:#18569F;color:#FFF;cursor:pointer;}
-        .article{background:#F7FBFF;border-left:4px solid #18569F;padding:15px;line-height:1.8;margin-bottom:15px;}
-        .question{background:#F9F9F9;padding:15px;margin:10px 0;border:1px solid #CCC;}
-        .option{padding:8px;margin:5px 0;background:#FFF;border:1px solid #CCC;cursor:pointer;}
-        .option.selected{background:#D1E7FF;}
-        .option.correct{background:#DFF2BF;}
-        .option.wrong{background:#FFBABA;}
-        .action-bar{display:flex;gap:10px;}
-        .action-bar button{flex:1;padding:10px;border:none;cursor:pointer;color:#FFF;}
-        .btn-check{background:#18569F;}
-        .btn-new{background:#FF9900;}
-        
-        /* ===================== 2009原版QQ农场 1:1像素级复刻 ===================== */
-        .qq-farm-pasture{display:none;}
-        /* 农场主容器 - 原版边框 */
-        .farm-container{background:#FFF;border:4px solid #6B99C9;border-radius:0;position:relative;}
-        /* 农场顶部状态栏 - 原版 */
-        .farm-top{background:#6B99C9;color:#FFF;padding:8px 15px;font-size:14px;font-weight:bold;display:flex;justify-content:space-between;}
-        /* 农场工具栏 - 原版左侧工具栏 */
-        .farm-toolbar{width:80px;background:#C6E2FF;float:left;border-right:2px solid #6B99C9;height:500px;padding:10px;}
-        .tool-btn{width:60px;height:60px;background:#FFF;border:2px solid #6B99C9;margin:10px 0;cursor:pointer;font-size:12px;text-align:center;display:flex;align-items:center;justify-content:center;flex-direction:column;}
-        .tool-btn img{width:32px;height:32px;}
-        /* 农场土地区域 - 原版8块土地布局 */
-        .farm-land{float:left;width:780px;padding:20px;}
-        .land-grid{display:grid;grid-template-columns:repeat(4,120px);grid-template-rows:repeat(2,120px);gap:15px;}
-        /* 原版土地纹理 */
-        .land{width:120px;height:120px;background:#D9BB93;border:3px solid #B1906F;position:relative;cursor:pointer;}
-        .land.planted{background:#A8D18F;}
-        .land .txt{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-size:12px;color:#333;}
-        /* 清除浮动 */
-        .clear{clear:both;}
-        
-        /* ===================== 2009原版QQ牧场 1:1像素级复刻 ===================== */
-        .pasture-container{display:none;background:#FFF;border:4px solid #6B99C9;margin-top:10px;}
-        .pasture-top{background:#6B99C9;color:#FFF;padding:8px 15px;font-size:14px;font-weight:bold;}
-        .pasture-main{display:flex;}
-        .pasture-left{width:200px;background:#C6E2FF;border-right:2px solid #6B99C9;padding:10px;}
-        .pasture-right{flex:1;padding:20px;}
-        /* 原版牧场窝棚 */
-        .shed{background:#E6F7FF;border:2px solid #6B99C9;padding:20px;text-align:center;margin:10px 0;}
-        .shed h3{color:#18569F;margin-bottom:10px;}
-        .animal{font-size:50px;margin-bottom:10px;}
-        .feed-btn{padding:10px 20px;background:#18569F;color:#FFF;border:none;cursor:pointer;}
+        .read-page {
+            display: none;
+        }
+        .back-btn {
+            padding: 8px 16px;
+            background: #6b99c9;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .read-box {
+            background: white;
+            border: 2px solid #6b99c9;
+            padding: 20px;
+        }
+        .article {
+            background: #f7fbff;
+            border-left: 4px solid #18569f;
+            padding: 15px;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+        .option {
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .option.correct { background: #dff2bf; }
+        .option.wrong { background: #ffbaba; }
+
+        /* ===================== 2D动画版 QQ农场牧场 核心 ===================== */
+        .farm-pasture {
+            display: none;
+        }
+        /* 农场容器 原版样式 */
+        .farm-box {
+            background: white;
+            border: 4px solid #6b99c9;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .farm-title {
+            background: #6b99c9;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        /* 工具栏 */
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        .tool {
+            width: 60px;
+            height: 60px;
+            background: #c6e2ff;
+            border: 2px solid #6b99c9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        /* 土地 2D视觉 + 动画 */
+        .land-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .land {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #d9bb93;
+            border: 3px solid #b1906f;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+        /* 作物动画 2D生长 */
+        .crop {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            display: none;
+            /* 生长动画 */
+            animation: grow 1s ease;
+        }
+        @keyframes grow {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        .land.planted .crop {
+            display: block;
+        }
+
+        /* 牧场 2D动画 */
+        .pasture-box {
+            background: white;
+            border: 4px solid #6b99c9;
+            padding: 15px;
+        }
+        .animal-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .animal {
+            text-align: center;
+            padding: 20px;
+            background: #e6f7ff;
+            border: 2px solid #6b99c9;
+            border-radius: 8px;
+        }
+        /* 动物晃动动画 */
+        .animal-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+            animation: shake 2s infinite ease-in-out;
+        }
+        @keyframes shake {
+            0%,100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        .feed-btn {
+            padding: 8px 16px;
+            background: #18569f;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
 
 <!-- 登录 -->
-<div class="login" id="loginBox">
+<div class="login" id="login">
     <h2>学生登录</h2>
     <input id="user" placeholder="账号">
     <input id="pwd" type="password" placeholder="密码">
     <button onclick="login()">登录</button>
-    <p class="tip" id="errTip">账号或密码错误</p>
 </div>
 
 <!-- 主界面 -->
-<div class="main" id="mainPage">
-    <div class="main-title">明舟教育 - 单词学习乐园</div>
+<div class="main" id="main">
+    <div class="main-title">明舟教育单词乐园</div>
     <div class="resource">
-        <span>🌾 牧草: <span id="grass">0</span></span>
-        <span>💧 水分: <span id="water">0</span></span>
+        🌾 牧草: <span id="grass">0</span> &nbsp;&nbsp; 💧 水分: <span id="water">0</span>
     </div>
-    <div class="main-menu">
-        <button onclick="showRead()">📖 分级阅读训练</button>
-        <button onclick="showFarmPasture()">🚜 QQ农场+牧场(原版复刻)</button>
-        <button onclick="logout()">退出登录</button>
-    </div>
+    <button class="main-btn" onclick="showRead()">📖 分级阅读</button>
+    <button class="main-btn" onclick="showFarm()">🚜 QQ农场+牧场</button>
+    <button class="main-btn" onclick="logout()">退出登录</button>
 </div>
 
-<!-- 阅读页面 -->
-<div class="read-page" id="readPage">
-    <button class="back-btn" onclick="backMain()">← 返回主页</button>
+<!-- 阅读 -->
+<div class="read-page" id="read">
+    <button class="back-btn" onclick="back()">← 返回</button>
     <div class="read-box">
-        <h3>新课标分级阅读</h3>
-        <div class="select-bar">
-            <select id="grade">
-                <option value="3">三年级</option>
-                <option value="4">四年级</option>
-                <option value="5">五年级</option>
-                <option value="6">六年级</option>
-            </select>
-            <button onclick="generateRead()">生成阅读</button>
-        </div>
-        <div id="readResult" style="display:none;">
-            <div class="article" id="articleTxt"></div>
-            <div id="questionBox"></div>
-            <div class="action-bar">
-                <button class="btn-check" onclick="checkAnswer()">提交批改</button>
-                <button class="btn-new" onclick="generateRead()">重新生成</button>
-            </div>
-        </div>
+        <h3 style="text-align:center; margin-bottom:10px">分级阅读</h3>
+        <button onclick="genRead()" style="padding:8px 16px; background:#18569f; color:white; border:none; cursor:pointer;">生成阅读</button>
+        <div class="article" id="art" style="margin-top:10px; display:none;"></div>
+        <div id="qbox" style="margin-top:10px;"></div>
+        <button onclick="check()" style="margin-top:10px; padding:8px 16px; background:#18569f; color:white; border:none; cursor:pointer; display:none" id="checkBtn">提交批改</button>
     </div>
 </div>
 
-<!-- ===================== 2009原版QQ农场+牧场 ===================== -->
-<div class="qq-farm-pasture" id="fpPage">
-    <button class="back-btn" onclick="backMain()">← 返回主页</button>
+<!-- 2D动画农场牧场 -->
+<div class="farm-pasture" id="fp">
+    <button class="back-btn" onclick="back()">← 返回</button>
     
-    <!-- QQ农场 -->
-    <div class="farm-container">
-        <div class="farm-top">QQ农场 - 原版复刻</div>
-        <div class="farm-toolbar">
-            <div class="tool-btn" onclick="useTool('shovel')"><span>铲子</span></div>
-            <div class="tool-btn" onclick="useTool('seed')"><span>种子</span></div>
-            <div class="tool-btn" onclick="useTool('water')"><span>水壶</span></div>
-            <div class="tool-btn" onclick="useTool('harvest')"><span>收获</span></div>
+    <!-- 农场 -->
+    <div class="farm-box">
+        <div class="farm-title">🌾 QQ农场（2D动画版）</div>
+        <div class="toolbar">
+            <div class="tool" onclick="setTool('seed')">🌱</div>
+            <div class="tool" onclick="setTool('harvest')">🌾</div>
         </div>
-        <div class="farm-land">
-            <div class="land-grid">
-                <div class="land" onclick="operateLand(0)"><div class="txt">空地</div></div>
-                <div class="land" onclick="operateLand(1)"><div class="txt">空地</div></div>
-                <div class="land" onclick="operateLand(2)"><div class="txt">空地</div></div>
-                <div class="land" onclick="operateLand(3)"><div class="txt">空地</div></div>
-                <div class="land" onclick="operateLand(4)"><div class="txt">空地</div></div>
-                <div class="land" onclick="operateLand(5)"><div class="txt">空地</div></div>
-                <div class="land" onclick="operateLand(6)"><div class="txt">空地</div></div>
-                <div class="land" onclick="operateLand(7)"><div class="txt">空地</div></div>
-            </div>
+        <div class="land-grid">
+            <div class="land" onclick="act(0)"><div class="crop">🌾</div></div>
+            <div class="land" onclick="act(1)"><div class="crop">🌾</div></div>
+            <div class="land" onclick="act(2)"><div class="crop">🌾</div></div>
+            <div class="land" onclick="act(3)"><div class="crop">🌾</div></div>
+            <div class="land" onclick="act(4)"><div class="crop">🌾</div></div>
+            <div class="land" onclick="act(5)"><div class="crop">🌾</div></div>
+            <div class="land" onclick="act(6)"><div class="crop">🌾</div></div>
+            <div class="land" onclick="act(7)"><div class="crop">🌾</div></div>
         </div>
-        <div class="clear"></div>
     </div>
 
-    <!-- QQ牧场 -->
-    <div class="pasture-container" id="pastureBox">
-        <div class="pasture-top">QQ牧场 - 原版复刻</div>
-        <div class="pasture-main">
-            <div class="pasture-left">
-                <h3>饲料槽</h3>
-                <p>牧草: <span id="feedGrass">0</span></p>
+    <!-- 牧场 -->
+    <div class="pasture-box">
+        <div class="farm-title">🐮 QQ牧场（2D动画版）</div>
+        <div class="animal-group">
+            <div class="animal">
+                <div class="animal-icon">🐔</div>
+                <button class="feed-btn" onclick="feed(1)">喂养小鸡</button>
             </div>
-            <div class="pasture-right">
-                <div class="shed">
-                    <h3>窝</h3>
-                    <div class="animal">🐔</div>
-                    <button class="feed-btn" onclick="feedChicken()">喂养小鸡</button>
-                </div>
-                <div class="shed">
-                    <h3>棚</h3>
-                    <div class="animal">🐮</div>
-                    <button class="feed-btn" onclick="feedCow()">喂养小牛</button>
-                </div>
+            <div class="animal">
+                <div class="animal-icon">🐮</div>
+                <button class="feed-btn" onclick="feed(2)">喂养小牛</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-let username = "";
-let data = {grass:0, water:0, lands:Array(8).fill(null), tool:null};
-let questions = [];
-let userAnswer = {};
+let user = "";
+let data = { grass:0, water:0, lands:Array(8).fill(0), tool:"seed" };
 
 // 登录
-function login(){
-    let u = document.getElementById("user").value;
-    let p = document.getElementById("pwd").value;
-    if(!u||!p){alert("请输入账号密码");return;}
-    username = u;
-    loadData();
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("mainPage").style.display = "block";
+function login() {
+    user = document.getElementById("user").value;
+    if(!user) return alert("请输入账号");
+    load();
+    document.getElementById("login").style.display = "none";
+    document.getElementById("main").style.display = "block";
 }
 
-// 数据存储
-function loadData(){
-    let local = localStorage.getItem("student_"+username);
-    if(local) data = JSON.parse(local);
-    refreshUI();
+// 数据
+function load() {
+    let d = localStorage.getItem("data_"+user);
+    if(d) data = JSON.parse(d);
+    refresh();
 }
-function saveData(){localStorage.setItem("student_"+username, JSON.stringify(data));}
-function refreshUI(){
+function save() { localStorage.setItem("data_"+user, JSON.stringify(data)); }
+function refresh() {
     document.getElementById("grass").innerText = data.grass;
     document.getElementById("water").innerText = data.water;
-    document.getElementById("feedGrass").innerText = data.grass;
-    refreshLand();
-}
-
-// 页面切换
-function backMain(){
-    document.getElementById("readPage").style.display = "none";
-    document.getElementById("fpPage").style.display = "none";
-    document.getElementById("mainPage").style.display = "block";
-}
-function showRead(){
-    document.getElementById("mainPage").style.display = "none";
-    document.getElementById("readPage").style.display = "block";
-}
-function showFarmPasture(){
-    document.getElementById("mainPage").style.display = "none";
-    document.getElementById("fpPage").style.display = "block";
-}
-function logout(){location.reload();}
-
-// ===================== QQ农场原版操作 =====================
-function useTool(t){data.tool = t;alert("已选择："+({shovel:"铲子",seed:"种子",water:"水壶",harvest:"收获"}[t]));}
-function refreshLand(){
     document.querySelectorAll(".land").forEach((el,i)=>{
-        let s = data.lands[i];
-        el.classList.remove("planted");
-        el.querySelector(".txt").innerText = s?s:"空地";
-        if(s==="planted") el.classList.add("planted");
+        el.classList.toggle("planted", data.lands[i]===1);
     });
 }
-function operateLand(idx){
-    if(!data.tool){alert("请先选择工具栏工具！");return;}
-    if(data.tool==="seed"){
-        if(data.grass<1){alert("牧草不足！完成阅读获得！");return;}
+
+// 页面
+function back() {
+    document.getElementById("read").style.display = "none";
+    document.getElementById("fp").style.display = "none";
+    document.getElementById("main").style.display = "block";
+}
+function showRead() {
+    document.getElementById("main").style.display = "none";
+    document.getElementById("read").style.display = "block";
+}
+function showFarm() {
+    document.getElementById("main").style.display = "none";
+    document.getElementById("fp").style.display = "block";
+}
+function logout() { location.reload(); }
+
+// 农场操作 + 动画
+function setTool(t) { data.tool = t; }
+function act(i) {
+    if(data.tool === "seed") {
+        if(data.grass < 1) return alert("牧草不足！");
         data.grass--;
-        data.lands[idx] = "planted";
+        data.lands[i] = 1;
     }
-    if(data.tool==="harvest"){
-        if(data.lands[idx]!=="planted") return;
-        data.lands[idx] = null;
-        data.grass+=2;
+    if(data.tool === "harvest") {
+        if(data.lands[i]===1){
+            data.lands[i] = 0;
+            data.grass += 2;
+        }
     }
-    refreshLand();
-    saveData();
+    refresh();
+    save();
 }
 
-// ===================== QQ牧场原版操作 =====================
-function feedChicken(){
-    if(data.water<1){alert("水分不足！");return;}
-    data.water--;
-    saveData();
-    refreshUI();
-    alert("小鸡喂养成功！");
-}
-function feedCow(){
-    if(data.water<2){alert("水分不足！");return;}
-    data.water-=2;
-    saveData();
-    refreshUI();
-    alert("小牛喂养成功！");
+// 牧场喂养 + 动画
+function feed(type) {
+    let cost = type===1 ? 1 : 2;
+    if(data.water < cost) return alert("水分不足！");
+    data.water -= cost;
+    refresh();
+    save();
+    alert("喂养成功！");
 }
 
-// ===================== 阅读功能 =====================
-function generateRead(){
-    let g = document.getElementById("grade").value;
-    let bank = {
-        3:{article:`Hello, my name is Li Ming. I am nine years old. I am in Grade Three. I like animals very much. My favourite animal is the rabbit. It is white. It has two long ears and a short tail.`,questions:[{title:"How old is Li Ming?",options:["Eight","Nine","Ten"],answer:1}]},
-        4:{article:`My favourite season is spring. The weather is warm and sunny. Trees are green and flowers are beautiful. I can fly kites in the park.`,questions:[{title:"What's the weather like in spring?",options:["Cold","Warm","Hot"],answer:1}]},
-        5:{article:`Last Sunday I went to the zoo with my family. We saw tigers, lions, elephants, pandas and monkeys. The pandas were very cute.`,questions:[{title:"When did they go to the zoo?",options:["Last Saturday","Last Sunday","Last Friday"],answer:1}]},
-        6:{article:`Reading is a good hobby. We can learn new words and sentences from books. Reading makes us wise and happy.`,questions:[{title:"What can we learn from books?",options:["New words","Songs","Games"],answer:0}]}
-    };
-    let res = bank[g];
-    document.getElementById("articleTxt").innerText = res.article;
-    questions = res.questions;
-    userAnswer = {};
-    renderQuestions();
-    document.getElementById("readResult").style.display = "block";
+// 阅读
+function genRead() {
+    document.getElementById("art").style.display = "block";
+    document.getElementById("checkBtn").style.display = "block";
+    document.getElementById("art").innerText = "My favourite animal is the panda. It is black and white. It is very cute. I love pandas.";
+    document.getElementById("qbox").innerHTML = `
+        <div class="option" onclick="this.classList.toggle('correct')">1. Panda is black and white. (T/F)</div>
+    `;
 }
-function renderQuestions(){
-    let box = document.getElementById("questionBox");
-    box.innerHTML = "";
-    questions.forEach((q,i)=>{
-        let div = document.createElement("div");
-        div.className = "question";
-        let ops = q.options.map((o,k)=>`<div class="option" id="q${i}o${k}" onclick="selectAnswer(${i},${k})">${String.fromCharCode(65+k)}. ${o}</div>`).join("");
-        div.innerHTML = `<p>${i+1}. ${q.title}</p>${ops}`;
-        box.appendChild(div);
-    });
-}
-function selectAnswer(i,k){
-    userAnswer[i] = k;
-    document.querySelectorAll(`#q${i}o${k}`).forEach(e=>e.classList.add("selected"));
-}
-function checkAnswer(){
-    questions.forEach((q,i)=>{
-        q.options.forEach((o,k)=>{
-            let e = document.getElementById(`q${i}o${k}`);
-            e.classList.remove("correct","wrong");
-            if(k===q.answer) e.classList.add("correct");
-            else if(userAnswer[i]===k) e.classList.add("wrong");
-        });
-    });
-    data.grass+=2;
-    data.water+=1;
-    saveData();
-    refreshUI();
-    alert("批改完成！奖励牧草+2，水分+1！");
+function check() {
+    data.grass += 2;
+    data.water += 1;
+    save();
+    refresh();
+    alert("批改完成！奖励牧草+2 水分+1！");
 }
 </script>
 </body>
