@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>学生作业端 - 数学</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif;}
+        body{background:#eef7ff;padding:20px;max-width:800px;margin:0 auto;}
+        .header{background:#07c160;color:white;padding:20px;text-align:center;border-radius:12px;margin-bottom:20px;}
+        .tab-bar{display:flex;gap:10px;margin-bottom:20px;}
+        .tab{flex:1;padding:14px;text-align:center;background:white;border:2px solid #aad4ff;border-radius:8px;cursor:pointer;}
+        .tab.active{background:#07c160;color:white;}
+        .panel{background:white;padding:25px;border-radius:12px;display:none;}
+        .panel.active{display:block;}
+        input,textarea{width:100%;padding:14px;margin:8px 0;border:1px solid #ddd;border-radius:8px;}
+        .btn{width:100%;padding:15px;background:#07c160;color:white;border:none;border-radius:8px;cursor:pointer;}
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>📚 数学作业 - 学生端</h1>
+</div>
+<div class="tab-bar">
+    <div class="tab active" onclick="switchTab(0)">📖 查看作业</div>
+    <div class="tab" onclick="switchTab(1)">📝 提交作业</div>
+</div>
+<div class="panel active" id="p0">
+    <p>老师布置的作业会显示在这里</p>
+</div>
+<div class="panel" id="p1">
+    <input placeholder="你的姓名" id="userName">
+    <input placeholder="作业标题" id="workTitle">
+    <textarea rows="6" placeholder="你的答案" id="answer"></textarea>
+    <button class="btn" onclick="alert('提交成功')">提交作业</button>
+</div>
+<script>
+function switchTab(i){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('p'+i).classList.add('active');document.querySelectorAll('.tab')[i].classList.add('active');}
+</script>
+</body>
+</html>
