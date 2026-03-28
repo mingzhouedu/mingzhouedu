@@ -2,73 +2,147 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>明舟教育 - 小学英语背单词系统</title>
+    <title>明舟教育 - 官方校区网站</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: "Microsoft YaHei", sans-serif;
         }
         body {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            background: #f5f7fa;
         }
-        .title {
-            font-size: 32px;
-            color: white;
-            margin-bottom: 50px;
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 20px;
-            margin: 15px 0;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .btn-teacher {
+        /* 头部导航 */
+        .header {
             background: #2b85ff;
             color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .btn-student {
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        /*  banner */
+        .banner {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .banner h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        .banner p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        /* 课程入口 */
+        .course-box {
+            max-width: 900px;
+            margin: 50px auto;
+            display: flex;
+            gap: 30px;
+            padding: 20px;
+        }
+        .course-card {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .course-card .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        .course-card h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .course-card p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .course-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .english-btn {
             background: #07c160;
             color: white;
         }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        .math-btn {
+            background: #ff9800;
+            color: white;
+        }
+        /* 底部 */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
         }
     </style>
 </head>
 <body>
-    <h1 class="title">🐾 明舟教育 趣味背单词</h1>
-    <div class="card">
-        <!-- 标准超链接跳转，网页设计核心写法 -->
-        <a href="teacher.html" class="btn btn-teacher">👨‍🏫 教师管理端</a>
-        <a href="student.html" class="btn btn-student">📖 学生学习端</a>
+
+<!-- 头部 -->
+<div class="header">
+    <h1>明舟教育</h1>
+    <p>专注中小学课外辅导 | 英语 | 数学 | 一站式学习平台</p>
+</div>
+
+<!-- Banner -->
+<div class="banner">
+    <h2>欢迎来到明舟教育官方学习平台</h2>
+    <p>为学生提供专业的英语单词训练、数学作业监督与讲解服务，轻松学习，高效提升！</p>
+</div>
+
+<!-- 课程入口 -->
+<div class="course-box">
+    <!-- 英语单词系统 -->
+    <div class="course-card" onclick="location.href='student.html'">
+        <div class="icon">📚</div>
+        <h3>英语学习</h3>
+        <p>单词记忆、分级阅读、趣味农场养成，一站式英语训练系统</p>
+        <button class="course-btn english-btn">进入学习</button>
     </div>
+
+    <!-- 数学作业系统 -->
+    <div class="course-card" onclick="location.href='math-index.html'">
+        <div class="icon">➕</div>
+        <h3>数学作业</h3>
+        <p>作业布置、视频讲解、作业提交与查看，全程学习监督</p>
+        <button class="course-btn math-btn">进入作业系统</button>
+    </div>
+</div>
+
+<!-- 底部 -->
+<div class="footer">
+    <p>© 2026 明舟教育 版权所有</p>
+</div>
+
 </body>
 </html>
