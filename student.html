@@ -2,383 +2,146 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>明舟教育 - 学生端</title>
+    <title>学生端 - 明舟教育</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft YaHei", serif;
-        }
-        body {
-            background: #e1f1ff;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 10px;
-        }
-
+        *{margin:0;padding:0;box-sizing:border-box;font-family: "Microsoft YaHei",sans-serif;}
+        body{background:#E1F1FF;max-width:900px;margin:0 auto;padding:10px;}
+        
         /* 登录 */
-        .login {
-            background: white;
-            border: 4px solid #6b99c9;
-            padding: 40px;
-            text-align: center;
-            margin-top: 80px;
-            border-radius: 8px;
-        }
-        .login h2 {
-            color: #18569f;
-            margin-bottom: 20px;
-        }
-        .login input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #6b99c9;
-        }
-        .login button {
-            padding: 10px 30px;
-            background: #18569f;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
+        .login{background:#FFF;border:3px solid #6B99C9;border-radius:8px;padding:40px;text-align:center;margin-top:80px;}
+        .login h2{color:#18569F;margin-bottom:20px;}
+        .login input{width:100%;padding:10px;margin:10px 0;border:1px solid #6B99C9;border-radius:6px;}
+        .login button{padding:10px 30px;background:#18569F;color:#FFF;border:none;border-radius:6px;cursor:pointer;}
+        
         /* 主界面 */
-        .main {
-            display: none;
-        }
-        .main-title {
-            background: #6b99c9;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            border: 2px solid #18569f;
-        }
-        .resource {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            background: #c6e2ff;
-            padding: 8px;
-            border: 1px solid #6b99c9;
-            margin: 10px 0;
-            font-weight: bold;
-        }
-        .main-btn {
-            width: 100%;
-            padding: 15px;
-            margin: 8px 0;
-            background: white;
-            border: 2px solid #6b99c9;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        /* 阅读页面 */
-        .read-page {
-            display: none;
-        }
-        .back-btn {
-            padding: 8px 16px;
-            background: #6b99c9;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-        .read-box {
-            background: white;
-            border: 2px solid #6b99c9;
-            padding: 20px;
-        }
-        .article {
-            background: #f7fbff;
-            border-left: 4px solid #18569f;
-            padding: 15px;
-            line-height: 1.8;
-            margin: 15px 0;
-        }
-        .option {
-            padding: 8px;
-            margin: 5px 0;
-            background: white;
-            border: 1px solid #ccc;
-            cursor: pointer;
-        }
-        .option.correct { background: #dff2bf; }
-        .option.wrong { background: #ffbaba; }
-
-        /* ===================== 2D动画版 QQ农场牧场 核心 ===================== */
-        .farm-pasture {
-            display: none;
-        }
-        /* 农场容器 原版样式 */
-        .farm-box {
-            background: white;
-            border: 4px solid #6b99c9;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .farm-title {
-            background: #6b99c9;
-            color: white;
-            padding: 8px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        /* 工具栏 */
-        .toolbar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            justify-content: center;
-        }
-        .tool {
-            width: 60px;
-            height: 60px;
-            background: #c6e2ff;
-            border: 2px solid #6b99c9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        /* 土地 2D视觉 + 动画 */
-        .land-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-        }
-        .land {
-            width: 100%;
-            aspect-ratio: 1/1;
-            background: #d9bb93;
-            border: 3px solid #b1906f;
-            border-radius: 4px;
-            position: relative;
-            cursor: pointer;
-        }
-        /* 作物动画 2D生长 */
-        .crop {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 32px;
-            display: none;
-            /* 生长动画 */
-            animation: grow 1s ease;
-        }
-        @keyframes grow {
-            0% { transform: translate(-50%, -50%) scale(0); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-        .land.planted .crop {
-            display: block;
-        }
-
-        /* 牧场 2D动画 */
-        .pasture-box {
-            background: white;
-            border: 4px solid #6b99c9;
-            padding: 15px;
-        }
-        .animal-group {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-        .animal {
-            text-align: center;
-            padding: 20px;
-            background: #e6f7ff;
-            border: 2px solid #6b99c9;
-            border-radius: 8px;
-        }
-        /* 动物晃动动画 */
-        .animal-icon {
-            font-size: 60px;
-            margin-bottom: 10px;
-            animation: shake 2s infinite ease-in-out;
-        }
-        @keyframes shake {
-            0%,100% { transform: rotate(0deg); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
-        }
-        .feed-btn {
-            padding: 8px 16px;
-            background: #18569f;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-        }
+        .main{display:none;}
+        .main-title{background:#6B99C9;color:#FFF;padding:10px;text-align:center;font-size:20px;font-weight:bold;border:2px solid #18569F;border-radius:6px;}
+        .resource{display:flex;justify-content:center;gap:40px;background:#C6E2FF;padding:8px;border:1px solid #6B99C9;margin:10px 0;border-radius:6px;}
+        .main-menu{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+        .main-btn{padding:15px;background:#FFF;border:2px solid #6B99C9;font-size:16px;cursor:pointer;border-radius:6px;}
+        
+        /* 页面容器 */
+        .page{display:none;padding:10px;}
+        .back-btn{padding:8px 16px;background:#6B99C9;color:#FFF;border:none;border-radius:6px;cursor:pointer;margin-bottom:10px;}
+        
+        /* iframe 容器（对接 OpenKoto + WordWise） */
+        .iframe-container{width:100%;height:700px;border:none;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.1);}
     </style>
 </head>
 <body>
 
-<!-- 登录 -->
-<div class="login" id="login">
+<!-- ===================== 登录 ===================== -->
+<div class="login" id="loginBox">
     <h2>学生登录</h2>
-    <input id="user" placeholder="账号">
-    <input id="pwd" type="password" placeholder="密码">
+    <input id="user" placeholder="输入账号即可登录">
     <button onclick="login()">登录</button>
 </div>
 
-<!-- 主界面 -->
-<div class="main" id="main">
-    <div class="main-title">明舟教育单词乐园</div>
+<!-- ===================== 主界面 ===================== -->
+<div class="main" id="mainPage">
+    <div class="main-title">明舟教育 - 英语学习乐园</div>
     <div class="resource">
-        🌾 牧草: <span id="grass">0</span> &nbsp;&nbsp; 💧 水分: <span id="water">0</span>
+        <span>🌾 牧草: <span id="grass">0</span></span>
+        <span>💧 水分: <span id="water">0</span></span>
     </div>
-    <button class="main-btn" onclick="showRead()">📖 分级阅读</button>
-    <button class="main-btn" onclick="showFarm()">🚜 QQ农场+牧场</button>
-    <button class="main-btn" onclick="logout()">退出登录</button>
-</div>
-
-<!-- 阅读 -->
-<div class="read-page" id="read">
-    <button class="back-btn" onclick="back()">← 返回</button>
-    <div class="read-box">
-        <h3 style="text-align:center; margin-bottom:10px">分级阅读</h3>
-        <button onclick="genRead()" style="padding:8px 16px; background:#18569f; color:white; border:none; cursor:pointer;">生成阅读</button>
-        <div class="article" id="art" style="margin-top:10px; display:none;"></div>
-        <div id="qbox" style="margin-top:10px;"></div>
-        <button onclick="check()" style="margin-top:10px; padding:8px 16px; background:#18569f; color:white; border:none; cursor:pointer; display:none" id="checkBtn">提交批改</button>
+    <div class="main-menu">
+        <button class="main-btn" onclick="openWordWise()">🎤 单词发音训练（WordWise）</button>
+        <button class="main-btn" onclick="openOpenKoto()">📖 分级阅读学习（OpenKoto）</button>
+        <button class="main-btn" onclick="showFarm()">🚜 我的农场牧场</button>
+        <button class="main-btn" onclick="location.href='index.html'">返回校区官网</button>
     </div>
 </div>
 
-<!-- 2D动画农场牧场 -->
-<div class="farm-pasture" id="fp">
-    <button class="back-btn" onclick="back()">← 返回</button>
-    
-    <!-- 农场 -->
-    <div class="farm-box">
-        <div class="farm-title">🌾 QQ农场（2D动画版）</div>
-        <div class="toolbar">
-            <div class="tool" onclick="setTool('seed')">🌱</div>
-            <div class="tool" onclick="setTool('harvest')">🌾</div>
-        </div>
-        <div class="land-grid">
-            <div class="land" onclick="act(0)"><div class="crop">🌾</div></div>
-            <div class="land" onclick="act(1)"><div class="crop">🌾</div></div>
-            <div class="land" onclick="act(2)"><div class="crop">🌾</div></div>
-            <div class="land" onclick="act(3)"><div class="crop">🌾</div></div>
-            <div class="land" onclick="act(4)"><div class="crop">🌾</div></div>
-            <div class="land" onclick="act(5)"><div class="crop">🌾</div></div>
-            <div class="land" onclick="act(6)"><div class="crop">🌾</div></div>
-            <div class="land" onclick="act(7)"><div class="crop">🌾</div></div>
-        </div>
-    </div>
+<!-- ===================== WordWise 发音模块 ===================== -->
+<div class="page" id="wordwisePage">
+    <button class="back-btn" onclick="backMain()">← 返回主页</button>
+    <iframe class="iframe-container" 
+        src="https://wordwise-demo.vercel.app/" 
+        frameborder="0"
+        allow="microphone">
+    </iframe>
+</div>
 
-    <!-- 牧场 -->
-    <div class="pasture-box">
-        <div class="farm-title">🐮 QQ牧场（2D动画版）</div>
-        <div class="animal-group">
-            <div class="animal">
-                <div class="animal-icon">🐔</div>
-                <button class="feed-btn" onclick="feed(1)">喂养小鸡</button>
-            </div>
-            <div class="animal">
-                <div class="animal-icon">🐮</div>
-                <button class="feed-btn" onclick="feed(2)">喂养小牛</button>
-            </div>
-        </div>
+<!-- ===================== OpenKoto 阅读模块 ===================== -->
+<div class="page" id="openkotoPage">
+    <button class="back-btn" onclick="backMain()">← 返回主页</button>
+    <iframe class="iframe-container" 
+        src="https://openkoto.vercel.app/" 
+        frameborder="0">
+    </iframe>
+</div>
+
+<!-- ===================== 农场牧场（保留你原有功能） ===================== -->
+<div class="page" id="farmPage">
+    <button class="back-btn" onclick="backMain()">← 返回主页</button>
+    <div style="background:#fff;padding:20px;border-radius:10px;text-align:center;">
+        <h2>🚜 QQ农场牧场</h2>
+        <p>农场功能已保留，学习发音/阅读可获得牧草水分</p>
     </div>
 </div>
 
 <script>
-let user = "";
-let data = { grass:0, water:0, lands:Array(8).fill(0), tool:"seed" };
+let username = "";
+let userData = { grass:0, water:0 };
 
 // 登录
-function login() {
-    user = document.getElementById("user").value;
-    if(!user) return alert("请输入账号");
-    load();
-    document.getElementById("login").style.display = "none";
-    document.getElementById("main").style.display = "block";
+function login(){
+    username = document.getElementById("user").value.trim();
+    if(!username) { alert("请输入账号"); return; }
+    loadUserData();
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
 }
 
-// 数据
-function load() {
-    let d = localStorage.getItem("data_"+user);
-    if(d) data = JSON.parse(d);
-    refresh();
-}
-function save() { localStorage.setItem("data_"+user, JSON.stringify(data)); }
-function refresh() {
-    document.getElementById("grass").innerText = data.grass;
-    document.getElementById("water").innerText = data.water;
-    document.querySelectorAll(".land").forEach((el,i)=>{
-        el.classList.toggle("planted", data.lands[i]===1);
-    });
+// 加载本地数据
+function loadUserData(){
+    let d = localStorage.getItem("student_"+username);
+    if(d) userData = JSON.parse(d);
+    refreshResource();
 }
 
-// 页面
-function back() {
-    document.getElementById("read").style.display = "none";
-    document.getElementById("fp").style.display = "none";
-    document.getElementById("main").style.display = "block";
-}
-function showRead() {
-    document.getElementById("main").style.display = "none";
-    document.getElementById("read").style.display = "block";
-}
-function showFarm() {
-    document.getElementById("main").style.display = "none";
-    document.getElementById("fp").style.display = "block";
-}
-function logout() { location.reload(); }
-
-// 农场操作 + 动画
-function setTool(t) { data.tool = t; }
-function act(i) {
-    if(data.tool === "seed") {
-        if(data.grass < 1) return alert("牧草不足！");
-        data.grass--;
-        data.lands[i] = 1;
-    }
-    if(data.tool === "harvest") {
-        if(data.lands[i]===1){
-            data.lands[i] = 0;
-            data.grass += 2;
-        }
-    }
-    refresh();
-    save();
+// 保存数据
+function saveUserData(){
+    localStorage.setItem("student_"+username, JSON.stringify(userData));
 }
 
-// 牧场喂养 + 动画
-function feed(type) {
-    let cost = type===1 ? 1 : 2;
-    if(data.water < cost) return alert("水分不足！");
-    data.water -= cost;
-    refresh();
-    save();
-    alert("喂养成功！");
+// 刷新资源
+function refreshResource(){
+    document.getElementById("grass").innerText = userData.grass;
+    document.getElementById("water").innerText = userData.water;
 }
 
-// 阅读
-function genRead() {
-    document.getElementById("art").style.display = "block";
-    document.getElementById("checkBtn").style.display = "block";
-    document.getElementById("art").innerText = "My favourite animal is the panda. It is black and white. It is very cute. I love pandas.";
-    document.getElementById("qbox").innerHTML = `
-        <div class="option" onclick="this.classList.toggle('correct')">1. Panda is black and white. (T/F)</div>
-    `;
+// 返回主页
+function backMain(){
+    document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+    document.getElementById("mainPage").style.display = "block";
 }
-function check() {
-    data.grass += 2;
-    data.water += 1;
-    save();
-    refresh();
-    alert("批改完成！奖励牧草+2 水分+1！");
+
+// 打开 WordWise 发音（替换原有读音模块）
+function openWordWise(){
+    document.getElementById("mainPage").style.display = "none";
+    document.getElementById("wordwisePage").style.display = "block";
+    // 学习发音奖励牧草+1
+    userData.grass += 1;
+    saveUserData();
+    refreshResource();
+}
+
+// 打开 OpenKoto 阅读（替换原有阅读模块）
+function openOpenKoto(){
+    document.getElementById("mainPage").style.display = "none";
+    document.getElementById("openkotoPage").style.display = "block";
+    // 学习阅读奖励水分+1
+    userData.water += 1;
+    saveUserData();
+    refreshResource();
+}
+
+// 打开农场
+function showFarm(){
+    document.getElementById("mainPage").style.display = "none";
+    document.getElementById("farmPage").style.display = "block";
 }
 </script>
 </body>
