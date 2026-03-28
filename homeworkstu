@@ -5,95 +5,36 @@
     <title>数学作业系统 - 明舟教育</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft YaHei", sans-serif;
-        }
-        body {
-            background: #fff3e0;
-            max-width: 700px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-        .title {
-            text-align: center;
-            color: #ff9800;
-            margin-bottom: 40px;
-            font-size: 28px;
-        }
-        .enter-box {
-            display: flex;
-            gap: 20px;
-        }
-        .enter-card {
-            flex: 1;
-            background: white;
-            padding: 40px 20px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .enter-icon {
-            font-size: 40px;
-            margin-bottom: 20px;
-        }
-        .enter-btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-        .student-btn {
-            background: #07c160;
-            color: white;
-        }
-        .teacher-btn {
-            background: #2b85ff;
-            color: white;
-        }
-        .back-home {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .back-home button {
-            padding: 10px 20px;
-            background: #666;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif;}
+        body{background:#fff3e0;max-width:700px;margin:50px auto;padding:20px;}
+        .title{text-align:center;color:#ff9800;margin-bottom:40px;font-size:28px;}
+        .enter-box{display:flex;gap:20px;}
+        .enter-card{flex:1;background:white;padding:40px 20px;border-radius:16px;text-align:center;}
+        .enter-btn{padding:12px 25px;border:none;border-radius:8px;cursor:pointer;margin-top:15px;}
+        .student-btn{background:#07c160;color:white;}
+        .teacher-btn{background:#2b85ff;color:white;}
+        .back-home{text-align:center;margin-top:30px;}
+        .back-home button{padding:10px 20px;background:#666;color:white;border:none;cursor:pointer;}
     </style>
 </head>
 <body>
-
 <h1 class="title">➡️ 数学作业系统</h1>
-
 <div class="enter-box">
-    <!-- 学生入口 -->
     <div class="enter-card">
-        <div class="enter-icon">👨‍🎓</div>
+        <div style="font-size:40px;">👨‍🎓</div>
         <h3>学生端</h3>
-        <p>查看作业、提交作业、观看讲解</p>
+        <p>查看作业、提交作业、看讲解</p>
         <button class="enter-btn student-btn" onclick="location.href='student-homework.html'">学生进入</button>
     </div>
-
-    <!-- 教师入口 -->
     <div class="enter-card">
-        <div class="enter-icon">👨‍🏫</div>
+        <div style="font-size:40px;">👨‍🏫</div>
         <h3>教师端</h3>
-        <p>上传视频、布置作业、查看提交</p>
+        <p>布置作业、传视频、查提交</p>
         <button class="enter-btn teacher-btn" onclick="location.href='homework-module.html'">教师进入</button>
     </div>
 </div>
-
 <div class="back-home">
-    <button onclick="location.href='index.html'">← 返回校区官网首页</button>
+    <button onclick="location.href='index.html'">← 返回校区官网</button>
 </div>
-
 </body>
 </html>
