@@ -43,13 +43,13 @@
     </div>
     <div class="main-menu">
         <button class="main-btn" onclick="openWordWise()">🎤 单词发音训练</button>
-        <button class="main-btn" onclick="openVocabLearner()">📖 阅读生词学习（新版稳定）</button>
+        <button class="main-btn" onclick="openVocabLearner()">📖 阅读生词学习</button>
         <button class="main-btn" onclick="showFarm()">🚜 我的农场牧场</button>
         <button class="main-btn" onclick="location.href='index.html'">返回校区官网</button>
     </div>
 </div>
 
-<!-- 发音 -->
+<!-- 发音模块 -->
 <div class="page" id="wordwisePage">
     <button class="back-btn" onclick="backMain()">← 返回主页</button>
     <iframe class="iframe-container" 
@@ -58,7 +58,7 @@
     </iframe>
 </div>
 
-<!-- 🔥 新版阅读：Vocabulary-Learner（稳定不404） -->
+<!-- 阅读模块：Vocabulary-Learner（唯一阅读模块） -->
 <div class="page" id="vocabPage">
     <button class="back-btn" onclick="backMain()">← 返回主页</button>
     <iframe class="iframe-container" 
@@ -67,7 +67,7 @@
     </iframe>
 </div>
 
-<!-- 农场 -->
+<!-- 农场模块 -->
 <div class="page" id="farmPage">
     <button class="back-btn" onclick="backMain()">← 返回主页</button>
     <div style="background:#fff;padding:20px;border-radius:10px;text-align:center;">
@@ -80,6 +80,7 @@
 let username = "";
 let userData = { grass:0, water:0 };
 
+// 登录
 function login(){
     username = document.getElementById("user").value.trim();
     if(!username) { alert("请输入账号"); return; }
@@ -88,26 +89,31 @@ function login(){
     document.getElementById("mainPage").style.display = "block";
 }
 
+// 加载数据
 function loadUserData(){
     let d = localStorage.getItem("student_"+username);
     if(d) userData = JSON.parse(d);
     refreshResource();
 }
 
+// 保存数据
 function saveUserData(){
     localStorage.setItem("student_"+username, JSON.stringify(userData));
 }
 
+// 刷新资源
 function refreshResource(){
     document.getElementById("grass").innerText = userData.grass;
     document.getElementById("water").innerText = userData.water;
 }
 
+// 返回主页
 function backMain(){
     document.querySelectorAll(".page").forEach(p=>p.style.display="none");
     document.getElementById("mainPage").style.display = "block";
 }
 
+// 打开发音
 function openWordWise(){
     document.getElementById("mainPage").style.display = "none";
     document.getElementById("wordwisePage").style.display = "block";
@@ -116,7 +122,7 @@ function openWordWise(){
     refreshResource();
 }
 
-// 新版阅读打开
+// 打开阅读（Vocabulary-Learner）
 function openVocabLearner(){
     document.getElementById("mainPage").style.display = "none";
     document.getElementById("vocabPage").style.display = "block";
@@ -125,6 +131,7 @@ function openVocabLearner(){
     refreshResource();
 }
 
+// 打开农场
 function showFarm(){
     document.getElementById("mainPage").style.display = "none";
     document.getElementById("farmPage").style.display = "block";
