@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>作业管理模块 - 教师端</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif;}
+        body{background:#eef7ff;padding:20px;max-width:900px;margin:0 auto;}
+        .header{background:#2b85ff;color:white;padding:20px;text-align:center;border-radius:12px;margin-bottom:20px;}
+        .tab-bar{display:flex;gap:10px;margin-bottom:20px;}
+        .tab{flex:1;padding:14px;text-align:center;background:white;border:2px solid #aad4ff;border-radius:8px;cursor:pointer;}
+        .tab.active{background:#2b85ff;color:white;}
+        .panel{background:white;padding:25px;border-radius:12px;display:none;}
+        .panel.active{display:block;}
+        input,textarea{width:100%;padding:14px;margin:8px 0;border:1px solid #ddd;border-radius:8px;}
+        .btn{width:100%;padding:15px;background:#2b85ff;color:white;border:none;border-radius:8px;cursor:pointer;}
+        .item{background:#f7f9ff;padding:16px;border-radius:8px;margin:12px 0;border-left:4px solid #2b85ff;}
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>📚 数学作业管理 - 教师端</h1>
+</div>
+<div class="tab-bar">
+    <div class="tab active" onclick="switchTab(0)">📺 上传讲解视频</div>
+    <div class="tab" onclick="switchTab(1)">📝 布置作业</div>
+    <div class="tab" onclick="switchTab(2)">👀 查看学生作业</div>
+</div>
+<div class="panel active" id="panel0">
+    <input placeholder="视频标题" id="vTitle">
+    <input placeholder="视频地址(.mp4)" id="vUrl">
+    <button class="btn" onclick="uploadVideo()">保存视频</button>
+    <div id="videoList"></div>
+</div>
+<div class="panel" id="panel1">
+    <input placeholder="学生账号" id="stuName">
+    <input placeholder="作业标题" id="workTitle">
+    <textarea rows="5" placeholder="作业内容" id="workContent"></textarea>
+    <button class="btn" onclick="assignWork()">发布作业</button>
+    <div id="assignedList"></div>
+</div>
+<div class="panel" id="panel2">
+    <div id="submittedList"></div>
+</div>
+<script>
+function switchTab(i){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('panel'+i).classList.add('active');document.querySelectorAll('.tab')[i].classList.add('active');}
+function uploadVideo(){let t=document.getElementById('vTitle').value,u=document.getElementById('vUrl').value;localStorage.setItem('hw_videos',JSON.stringify([{title:t,url:u}]));alert('上传成功');}
+function assignWork(){alert('作业布置成功');}
+</script>
+</body>
+</html>
