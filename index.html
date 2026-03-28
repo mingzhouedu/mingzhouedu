@@ -9,153 +9,176 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Microsoft YaHei", sans-serif;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
         }
 
+        /* 全屏唯美背景 */
         html, body {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 50%, #B3E5FC 100%);
+            background: linear-gradient(to bottom, #91d7ff 0%, #e6f7ff 50%, #d1f1ff 100%);
             position: relative;
         }
 
-        /* 标题 */
+        /* 顶部标题美化 */
         .header {
             position: absolute;
-            top: 40px;
+            top: 50px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
             z-index: 99;
         }
         .title {
-            font-size: 48px;
-            color: #2c3e50;
+            font-size: 52px;
+            color: #1a3a5f;
             font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            letter-spacing: 2px;
         }
         .slogan {
-            font-size: 24px;
-            color: #2980b9;
-            margin-top: 8px;
-            letter-spacing: 3px;
+            font-size: 26px;
+            color: #2d8bfd;
+            margin-top: 12px;
+            letter-spacing: 4px;
+            font-weight: 500;
         }
 
-        /* 远方太阳（明舟标志） */
+        /* 远方太阳（机构标志，柔和唯美） */
         .sun {
             position: absolute;
-            bottom: 200px;
-            left: 220px;
-            width: 110px;
-            height: 110px;
-            background: #FFD700;
+            bottom: 220px;
+            left: 240px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #ffec4e 0%, #ffd700 70%);
             border-radius: 50%;
-            box-shadow: 0 0 40px #FFEB3B, 0 0 80px #FFC107;
-            animation: shine 2.5s infinite alternate;
+            box-shadow: 0 0 50px #ffec4e, 0 0 100px #ffc107;
+            animation: sunShine 3s infinite alternate ease-in-out;
             z-index: 2;
         }
-        @keyframes shine {
+        @keyframes sunShine {
             0% { transform: scale(1); opacity: 0.9; }
-            100% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1.12); opacity: 1; }
         }
 
-        /* 海平面 */
+        /* 动态海平面 + 海浪微动效 */
         .sea {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 240px;
-            background: #5DADE2;
-            border-top: 4px solid #2980b9;
+            height: 260px;
+            background: #64b5f6;
+            border-top: 5px solid #2196f3;
             z-index: 3;
         }
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2390caf9' fill-opacity='0.6' d='M0,192L48,208C96,224,192,256,288,250.7C384,245,480,203,576,181.3C672,160,768,160,864,176C960,192,1056,224,1152,229.3C1248,235,1344,213,1392,202.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: 1440px 30px;
+            animation: waveMove 8s linear infinite;
+            z-index: 4;
+        }
+        @keyframes waveMove {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1440px; }
+        }
 
-        /* 灯塔（右侧） */
+        /* 卡通灯塔（右侧，简笔画柔和版） */
         .lighthouse {
             position: absolute;
-            right: 130px;
+            right: 140px;
             bottom: 0;
-            width: 70px;
-            height: 400px;
-            background: #fff;
-            border-left: 8px solid #2c3e50;
-            border-right: 8px solid #2c3e50;
+            width: 75px;
+            height: 420px;
+            background: #fafafa;
+            border-left: 8px solid #37474f;
+            border-right: 8px solid #37474f;
+            border-radius: 8px 8px 0 0;
             z-index: 10;
         }
         .lighthouse::before {
             content: '';
             position: absolute;
-            top: -35px;
+            top: -38px;
             left: 50%;
             transform: translateX(-50%);
-            border-left: 35px solid transparent;
-            border-right: 35px solid transparent;
-            border-bottom: 35px solid #e74c3c;
+            border-left: 38px solid transparent;
+            border-right: 38px solid transparent;
+            border-bottom: 38px solid #f44336;
         }
         .light {
             position: absolute;
-            top: 25px;
+            top: 28px;
             left: 50%;
             transform: translateX(-50%);
-            width: 24px;
-            height: 24px;
-            background: #FFEB3B;
+            width: 26px;
+            height: 26px;
+            background: #ffeb3b;
             border-radius: 50%;
-            box-shadow: 0 0 25px #FFEB3B;
-            animation: flash 2s infinite alternate;
+            box-shadow: 0 0 30px #ffeb3b;
+            animation: lightFlash 2.5s infinite alternate;
         }
-        @keyframes flash {
-            0% { opacity: 0.7; }
-            100% { opacity: 1; }
+        @keyframes lightFlash {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* 小船样式 */
+        /* 卡通小船（高颜值简笔画，鼠标悬浮效果） */
         .boat {
             position: absolute;
-            width: 180px;
+            width: 190px;
             cursor: pointer;
             z-index: 8;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
         .boat:hover {
-            filter: brightness(1.1);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+            transform: translateY(-3px);
         }
         .boat-body {
-            width: 180px;
-            height: 34px;
-            background: #fff;
-            border-radius: 12px 12px 0 0;
-            border: 4px solid #2c3e50;
+            width: 190px;
+            height: 36px;
+            background: #ffffff;
+            border-radius: 15px 15px 0 0;
+            border: 4px solid #263238;
             position: relative;
         }
         .boat-sail {
             position: absolute;
-            top: -45px;
+            top: -50px;
             left: 50%;
             transform: translateX(-50%);
-            border-left: 30px solid transparent;
-            border-right: 30px solid transparent;
-            border-bottom: 45px solid #f39c12;
+            border-left: 32px solid transparent;
+            border-right: 32px solid transparent;
+            border-bottom: 50px solid #ff9800;
         }
         .boat-label {
             text-align: center;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: bold;
-            color: #2c3e50;
-            margin-top: 8px;
+            color: #263238;
+            margin-top: 10px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
-        /* 小船位置 */
-        #boat-english { bottom: 90px; left: 200px; }
-        #boat-math { bottom: 170px; left: 200px; }
+        /* 小船位置（宽松布局，不拥挤） */
+        #boat-english { bottom: 100px; left: 220px; }
+        #boat-math { bottom: 190px; left: 220px; }
 
-        /* 核心动画：小船驶向太阳 */
+        /* 核心动画：小船唯美驶向太阳 */
         .boat-go {
-            animation: sailToSun 2.2s ease-in forwards !important;
+            animation: sailToSun 2.5s ease-in forwards !important;
         }
         @keyframes sailToSun {
-            0% { transform: translate(0, 0); opacity: 1; }
-            100% { transform: translate(650px, -100px); opacity: 0; }
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            50% { transform: translate(350px, -50px) rotate(1deg); opacity: 0.8; }
+            100% { transform: translate(680px, -120px) rotate(2deg); opacity: 0; }
         }
     </style>
 </head>
@@ -168,13 +191,14 @@
     <div class="slogan">舟楫载梦 · 明灯指路</div>
 </div>
 
-<!-- 远方太阳 -->
+<!-- 远方太阳（机构标志） -->
 <div class="sun"></div>
 
-<!-- 海平面 -->
+<!-- 海平面 + 动态海浪 -->
 <div class="sea"></div>
+<div class="wave"></div>
 
-<!-- 灯塔 -->
+<!-- 卡通灯塔 -->
 <div class="lighthouse">
     <div class="light"></div>
 </div>
@@ -196,16 +220,13 @@
 </div>
 
 <script>
-// 核心函数：播放动画 → 跳转页面
+// 点击小船：动画+跳转
 function sailAndGo(targetUrl, boatEl) {
-    // 先禁用点击，防止重复触发
     boatEl.style.pointerEvents = 'none';
-    // 启动动画
     boatEl.classList.add('boat-go');
-    // 动画结束后跳转
     setTimeout(() => {
         window.location.href = targetUrl;
-    }, 2200);
+    }, 2500);
 }
 </script>
 
