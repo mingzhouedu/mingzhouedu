@@ -12,34 +12,51 @@
             font-family: "Microsoft YaHei", sans-serif;
         }
 
-        /* 页面整体：漫画风全屏背景 */
-        body {
-            width: 100vw;
-            height: 100vh;
+        html, body {
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 50%, #B3E5FC 100%);
             position: relative;
         }
 
-        /* 顶部标题：机构名 + 愿景 */
+        /* 标题 */
         .header {
             position: absolute;
-            top: 30px;
+            top: 40px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
-            z-index: 10;
+            z-index: 99;
         }
         .title {
-            font-size: 42px;
+            font-size: 48px;
             color: #2c3e50;
             font-weight: bold;
-            margin-bottom: 8px;
         }
         .slogan {
-            font-size: 20px;
-            color: #3498db;
-            letter-spacing: 2px;
+            font-size: 24px;
+            color: #2980b9;
+            margin-top: 8px;
+            letter-spacing: 3px;
+        }
+
+        /* 远方太阳（明舟标志） */
+        .sun {
+            position: absolute;
+            bottom: 200px;
+            left: 220px;
+            width: 110px;
+            height: 110px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 40px #FFEB3B, 0 0 80px #FFC107;
+            animation: shine 2.5s infinite alternate;
+            z-index: 2;
+        }
+        @keyframes shine {
+            0% { transform: scale(1); opacity: 0.9; }
+            100% { transform: scale(1.1); opacity: 1; }
         }
 
         /* 海平面 */
@@ -47,172 +64,150 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 220px;
+            height: 240px;
             background: #5DADE2;
-            border-top: 4px solid #3498db;
+            border-top: 4px solid #2980b9;
+            z-index: 3;
         }
 
-        /* 远方的太阳（明舟标志）—— 左移，远方效果 */
-        .sun {
-            position: absolute;
-            bottom: 180px;
-            left: 280px;
-            width: 100px;
-            height: 100px;
-            background: #FFD700;
-            border-radius: 50%;
-            box-shadow: 0 0 30px #FFEB3B, 0 0 60px #FFC107;
-            animation: sun-shine 3s infinite alternate;
-            z-index: 1;
-        }
-        @keyframes sun-shine {
-            from { opacity: 0.8; transform: scale(1); }
-            to { opacity: 1; transform: scale(1.08); }
-        }
-
-        /* 右侧竖版灯塔 —— 简笔画风格 */
+        /* 灯塔（右侧） */
         .lighthouse {
             position: absolute;
-            right: 120px;
+            right: 130px;
             bottom: 0;
-            width: 60px;
-            height: 380px;
-            background: #ffffff;
+            width: 70px;
+            height: 400px;
+            background: #fff;
             border-left: 8px solid #2c3e50;
             border-right: 8px solid #2c3e50;
-            z-index: 5;
+            z-index: 10;
         }
         .lighthouse::before {
             content: '';
             position: absolute;
-            top: -30px;
+            top: -35px;
             left: 50%;
             transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 30px solid transparent;
-            border-right: 30px solid transparent;
-            border-bottom: 30px solid #e74c3c;
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            border-bottom: 35px solid #e74c3c;
         }
-        .lighthouse-light {
+        .light {
             position: absolute;
-            top: 20px;
+            top: 25px;
             left: 50%;
             transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             background: #FFEB3B;
             border-radius: 50%;
-            box-shadow: 0 0 20px #FFEB3B;
-            animation: light 2s infinite alternate;
+            box-shadow: 0 0 25px #FFEB3B;
+            animation: flash 2s infinite alternate;
         }
-        @keyframes light {
-            from { opacity: 0.6; }
-            to { opacity: 1; }
+        @keyframes flash {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
-        /* 小船通用样式 —— 漫画简笔画 */
+        /* 小船样式 */
         .boat {
             position: absolute;
-            width: 160px;
-            height: 60px;
+            width: 180px;
             cursor: pointer;
-            transition: all 0.3s;
             z-index: 8;
+            transition: all 0.2s;
+        }
+        .boat:hover {
+            filter: brightness(1.1);
         }
         .boat-body {
-            width: 160px;
-            height: 30px;
-            background: #ffffff;
-            border-radius: 10px 10px 0 0;
-            border: 3px solid #2c3e50;
+            width: 180px;
+            height: 34px;
+            background: #fff;
+            border-radius: 12px 12px 0 0;
+            border: 4px solid #2c3e50;
             position: relative;
         }
         .boat-sail {
             position: absolute;
-            top: -40px;
+            top: -45px;
             left: 50%;
             transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 25px solid transparent;
-            border-right: 25px solid transparent;
-            border-bottom: 40px solid #f39c12;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 45px solid #f39c12;
         }
-        .boat-text {
+        .boat-label {
             text-align: center;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             color: #2c3e50;
-            margin-top: 5px;
+            margin-top: 8px;
         }
 
-        /* 1号船：英语学习 */
-        #boat1 {
-            bottom: 80px;
-            left: 180px;
-        }
-        /* 2号船：数学作业 */
-        #boat2 {
-            bottom: 150px;
-            left: 180px;
-        }
+        /* 小船位置 */
+        #boat-english { bottom: 90px; left: 200px; }
+        #boat-math { bottom: 170px; left: 200px; }
 
-        /* 小船驶向太阳的动画 */
-        .boat-sail-animation {
-            animation: boat-to-sun 3s ease-in-out forwards;
+        /* 核心动画：小船驶向太阳 */
+        .boat-go {
+            animation: sailToSun 2.2s ease-in forwards !important;
         }
-        @keyframes boat-to-sun {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(580px) translateY(-80px); opacity: 0; }
+        @keyframes sailToSun {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(650px, -100px); opacity: 0; }
         }
     </style>
 </head>
 
 <body>
-    <!-- 顶部：机构名称 + 愿景 -->
-    <div class="header">
-        <div class="title">明舟教育</div>
-        <div class="slogan">舟楫载梦 · 明灯指路</div>
+
+<!-- 标题 -->
+<div class="header">
+    <div class="title">明舟教育</div>
+    <div class="slogan">舟楫载梦 · 明灯指路</div>
+</div>
+
+<!-- 远方太阳 -->
+<div class="sun"></div>
+
+<!-- 海平面 -->
+<div class="sea"></div>
+
+<!-- 灯塔 -->
+<div class="lighthouse">
+    <div class="light"></div>
+</div>
+
+<!-- 英语小船 -->
+<div class="boat" id="boat-english" onclick="sailAndGo('student.html', this)">
+    <div class="boat-body">
+        <div class="boat-sail"></div>
     </div>
+    <div class="boat-label">📖 英语学习</div>
+</div>
 
-    <!-- 远方的太阳（标志） -->
-    <div class="sun"></div>
-
-    <!-- 海平面 -->
-    <div class="sea"></div>
-
-    <!-- 右侧灯塔 -->
-    <div class="lighthouse">
-        <div class="lighthouse-light"></div>
+<!-- 数学小船 -->
+<div class="boat" id="boat-math" onclick="sailAndGo('math-index.html', this)">
+    <div class="boat-body">
+        <div class="boat-sail"></div>
     </div>
+    <div class="boat-label">🧮 数学作业</div>
+</div>
 
-    <!-- 小船1：英语学习 -->
-    <div class="boat" id="boat1" onclick="goPage('student.html', this)">
-        <div class="boat-body">
-            <div class="boat-sail"></div>
-        </div>
-        <div class="boat-text">📖 英语学习</div>
-    </div>
+<script>
+// 核心函数：播放动画 → 跳转页面
+function sailAndGo(targetUrl, boatEl) {
+    // 先禁用点击，防止重复触发
+    boatEl.style.pointerEvents = 'none';
+    // 启动动画
+    boatEl.classList.add('boat-go');
+    // 动画结束后跳转
+    setTimeout(() => {
+        window.location.href = targetUrl;
+    }, 2200);
+}
+</script>
 
-    <!-- 小船2：数学作业 -->
-    <div class="boat" id="boat2" onclick="goPage('math-index.html', this)">
-        <div class="boat-body">
-            <div class="boat-sail"></div>
-        </div>
-        <div class="boat-text">🧮 数学作业</div>
-    </div>
-
-    <script>
-        // 点击小船：播放动画 → 跳转页面
-        function goPage(url, element) {
-            // 添加驶向太阳的动画
-            element.classList.add('boat-sail-animation');
-            // 动画结束后跳转
-            setTimeout(() => {
-                window.location.href = url;
-            }, 2800);
-        }
-    </script>
 </body>
 </html>
