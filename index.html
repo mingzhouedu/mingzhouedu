@@ -12,16 +12,16 @@
             font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
         }
 
-        /* 全屏唯美背景 */
+        /* 唯美天空：治愈渐变色，少儿专属 */
         html, body {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: linear-gradient(to bottom, #91d7ff 0%, #e6f7ff 50%, #d1f1ff 100%);
+            background: linear-gradient(to bottom, #74b6ff 0%, #d4f1f9 50%, #f0fcff 100%);
             position: relative;
         }
 
-        /* 顶部标题美化 */
+        /* 顶部标题：柔和美观 */
         .header {
             position: absolute;
             top: 50px;
@@ -31,46 +31,47 @@
             z-index: 99;
         }
         .title {
-            font-size: 52px;
-            color: #1a3a5f;
+            font-size: 50px;
+            color: #165D7F;
             font-weight: bold;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.08);
             letter-spacing: 2px;
         }
         .slogan {
             font-size: 26px;
-            color: #2d8bfd;
+            color: #2A93D5;
             margin-top: 12px;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             font-weight: 500;
         }
 
-        /* 远方太阳（机构标志，柔和唯美） */
+        /* ===================== 🌅 真正的远方日出太阳（审美版） ===================== */
         .sun {
             position: absolute;
-            bottom: 220px;
+            bottom: 230px;
             left: 240px;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, #ffec4e 0%, #ffd700 70%);
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(ellipse at center, #FFF569 0%, #FFD147 40%, #FFB347 80%);
             border-radius: 50%;
-            box-shadow: 0 0 50px #ffec4e, 0 0 100px #ffc107;
-            animation: sunShine 3s infinite alternate ease-in-out;
-            z-index: 2;
+            box-shadow: 0 0 80px #FFF569, 0 0 160px #FFD147, 0 0 200px #FFB34744;
+            animation: sunGlow 4s infinite alternate ease-in-out;
+            opacity: 0.9;
+            z-index: 1;
         }
-        @keyframes sunShine {
-            0% { transform: scale(1); opacity: 0.9; }
-            100% { transform: scale(1.12); opacity: 1; }
+        @keyframes sunGlow {
+            0% { transform: scale(1); opacity: 0.85; }
+            100% { transform: scale(1.1); opacity: 1; }
         }
 
-        /* 动态海平面 + 海浪微动效 */
+        /* ===================== 🌊 动态唯美海浪 ===================== */
         .sea {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 260px;
-            background: #64b5f6;
-            border-top: 5px solid #2196f3;
+            height: 280px;
+            background: #64B5F6;
+            border-top: 5px solid #42A5F5;
             z-index: 3;
         }
         .wave {
@@ -78,123 +79,144 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 30px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2390caf9' fill-opacity='0.6' d='M0,192L48,208C96,224,192,256,288,250.7C384,245,480,203,576,181.3C672,160,768,160,864,176C960,192,1056,224,1152,229.3C1248,235,1344,213,1392,202.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
-            background-size: 1440px 30px;
-            animation: waveMove 8s linear infinite;
+            height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2381D4FA' fill-opacity='0.6' d='M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,208C960,192,1056,160,1152,160C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: 1440px 40px;
+            animation: wave 8s linear infinite;
             z-index: 4;
         }
-        @keyframes waveMove {
+        @keyframes wave {
             0% { background-position-x: 0; }
             100% { background-position-x: 1440px; }
         }
 
-        /* 卡通灯塔（右侧，简笔画柔和版） */
+        /* ===================== 🗼 真正的Q版卡通灯塔（审美版） ===================== */
         .lighthouse {
             position: absolute;
-            right: 140px;
+            right: 160px;
             bottom: 0;
-            width: 75px;
-            height: 420px;
-            background: #fafafa;
-            border-left: 8px solid #37474f;
-            border-right: 8px solid #37474f;
-            border-radius: 8px 8px 0 0;
+            width: 90px;
+            height: 460px;
+            background: #FDFEFE;
+            border-radius: 12px 12px 0 0;
+            border-left: 10px solid #546E7A;
+            border-right: 10px solid #546E7A;
+            box-shadow: -4px 0 10px rgba(0,0,0,0.1);
             z-index: 10;
         }
+        /* 灯塔塔顶：圆润造型 */
         .lighthouse::before {
             content: '';
             position: absolute;
-            top: -38px;
+            top: -45px;
             left: 50%;
             transform: translateX(-50%);
-            border-left: 38px solid transparent;
-            border-right: 38px solid transparent;
-            border-bottom: 38px solid #f44336;
+            width: 70px;
+            height: 45px;
+            background: #E53935;
+            border-radius: 8px 8px 0 0;
         }
+        /* 灯塔灯光：柔和光晕 */
         .light {
             position: absolute;
-            top: 28px;
+            top: 35px;
             left: 50%;
             transform: translateX(-50%);
-            width: 26px;
-            height: 26px;
-            background: #ffeb3b;
+            width: 32px;
+            height: 32px;
+            background: #FFEB3B;
             border-radius: 50%;
-            box-shadow: 0 0 30px #ffeb3b;
-            animation: lightFlash 2.5s infinite alternate;
+            box-shadow: 0 0 40px #FFEB3B, 0 0 80px #FFC107;
+            animation: light 3s infinite alternate;
         }
-        @keyframes lightFlash {
+        @keyframes light {
             0% { opacity: 0.6; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1.25); }
         }
 
-        /* 卡通小船（高颜值简笔画，鼠标悬浮效果） */
+        /* ===================== ⛵ 真正的童趣卡通帆船（审美版） ===================== */
         .boat {
             position: absolute;
-            width: 190px;
+            width: 260px;
             cursor: pointer;
             z-index: 8;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
         }
         .boat:hover {
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-            transform: translateY(-3px);
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+            transform: translateY(-6px) rotate(1deg);
         }
-        .boat-body {
-            width: 190px;
-            height: 36px;
-            background: #ffffff;
-            border-radius: 15px 15px 0 0;
-            border: 4px solid #263238;
-            position: relative;
-        }
-        .boat-sail {
+
+        /* 帆船桅杆：木质柔和 */
+        .boat-mast {
             position: absolute;
-            top: -50px;
             left: 50%;
             transform: translateX(-50%);
-            border-left: 32px solid transparent;
-            border-right: 32px solid transparent;
-            border-bottom: 50px solid #ff9800;
+            width: 10px;
+            height: 130px;
+            background: #A1887F;
+            border-radius: 5px;
+            z-index: 1;
         }
-        .boat-label {
-            text-align: center;
-            font-size: 19px;
+
+        /* 帆船船身：圆润卡通，无棱角 */
+        .boat-body {
+            width: 260px;
+            height: 55px;
+            background: #FFFFFF;
+            border-radius: 120px 120px 25px 25px;
+            border: 6px solid #3949AB;
+            position: relative;
+        }
+
+        /* 超大饱满船帆：渐变色彩，文字居中 */
+        .boat-sail {
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 110px;
+            background: linear-gradient(135deg, #FF9800, #FB8C00);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 88%, 0% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
             font-weight: bold;
-            color: #263238;
-            margin-top: 10px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            color: #FFFFFF;
+            text-shadow: 1px 2px 4px rgba(0,0,0,0.2);
+            border-radius: 4px;
         }
 
-        /* 小船位置（宽松布局，不拥挤） */
-        #boat-english { bottom: 100px; left: 220px; }
-        #boat-math { bottom: 190px; left: 220px; }
+        /* 帆船位置：宽松不拥挤 */
+        #boat-english { bottom: 130px; left: 210px; }
+        #boat-math { bottom: 240px; left: 210px; }
 
-        /* 核心动画：小船唯美驶向太阳 */
+        /* 帆船动画：唯美驶向太阳 */
         .boat-go {
-            animation: sailToSun 2.5s ease-in forwards !important;
+            animation: sailToSun 3.2s ease-in forwards !important;
         }
         @keyframes sailToSun {
             0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-            50% { transform: translate(350px, -50px) rotate(1deg); opacity: 0.8; }
-            100% { transform: translate(680px, -120px) rotate(2deg); opacity: 0; }
+            50% { transform: translate(500px, -90px) rotate(2deg); opacity: 0.8; }
+            100% { transform: translate(850px, -180px) rotate(3deg); opacity: 0; }
         }
     </style>
 </head>
 
 <body>
 
-<!-- 标题 -->
+<!-- 品牌标题 -->
 <div class="header">
     <div class="title">明舟教育</div>
     <div class="slogan">舟楫载梦 · 明灯指路</div>
 </div>
 
-<!-- 远方太阳（机构标志） -->
+<!-- 远方日出太阳 -->
 <div class="sun"></div>
 
-<!-- 海平面 + 动态海浪 -->
+<!-- 海面 + 动态海浪 -->
 <div class="sea"></div>
 <div class="wave"></div>
 
@@ -203,30 +225,30 @@
     <div class="light"></div>
 </div>
 
-<!-- 英语小船 -->
+<!-- 英语卡通帆船 -->
 <div class="boat" id="boat-english" onclick="sailAndGo('student.html', this)">
+    <div class="boat-mast"></div>
     <div class="boat-body">
-        <div class="boat-sail"></div>
+        <div class="boat-sail">英语学习</div>
     </div>
-    <div class="boat-label">📖 英语学习</div>
 </div>
 
-<!-- 数学小船 -->
+<!-- 数学卡通帆船 -->
 <div class="boat" id="boat-math" onclick="sailAndGo('math-index.html', this)">
+    <div class="boat-mast"></div>
     <div class="boat-body">
-        <div class="boat-sail"></div>
+        <div class="boat-sail">数学作业</div>
     </div>
-    <div class="boat-label">🧮 数学作业</div>
 </div>
 
 <script>
-// 点击小船：动画+跳转
+// 点击帆船：动画+跳转
 function sailAndGo(targetUrl, boatEl) {
     boatEl.style.pointerEvents = 'none';
     boatEl.classList.add('boat-go');
     setTimeout(() => {
         window.location.href = targetUrl;
-    }, 2500);
+    }, 3200);
 }
 </script>
 
