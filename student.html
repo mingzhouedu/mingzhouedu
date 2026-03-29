@@ -1,141 +1,30 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>学生端 - 明舟教育</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family: "Microsoft YaHei",sans-serif;}
-        body{background:#E1F1FF;max-width:900px;margin:0 auto;padding:10px;}
-        
-        .login{background:#FFF;border:3px solid #6B99C9;border-radius:8px;padding:40px;text-align:center;margin-top:80px;}
-        .login h2{color:#18569F;margin-bottom:20px;}
-        .login input{width:100%;padding:10px;margin:10px 0;border:1px solid #6B99C9;border-radius:6px;}
-        .login button{padding:10px 30px;background:#18569F;color:#FFF;border:none;border-radius:6px;cursor:pointer;}
-        
-        .main{display:none;}
-        .main-title{background:#6B99C9;color:#FFF;padding:10px;text-align:center;font-size:20px;font-weight:bold;border:2px solid #18569F;border-radius:6px;}
-        .resource{display:flex;justify-content:center;gap:40px;background:#C6E2FF;padding:8px;border:1px solid #6B99C9;margin:10px 0;border-radius:6px;}
-        .main-menu{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
-        .main-btn{padding:15px;background:#FFF;border:2px solid #6B99C9;font-size:16px;cursor:pointer;border-radius:6px;}
-        
-        .page{display:none;padding:10px;}
-        .back-btn{padding:8px 16px;background:#6B99C9;color:#FFF;border:none;border-radius:6px;cursor:pointer;margin-bottom:10px;}
-        
-        .iframe-container{width:100%;height:700px;border:none;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.1);}
-    </style>
+<meta charset="UTF-8">
+<title>英语学习 - 明舟教育</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif}
+body{background:#fff8e1;padding:40px 20px}
+.title{text-align:center;font-size:36px;color:#e65100;margin-bottom:30px}
+.back{position:fixed;top:20px;left:20px;padding:12px 24px;background:#ff9800;color:white;border-radius:30px;cursor:pointer;font-size:16px}
+.container{max-width:800px;margin:0 auto;background:white;padding:30px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+.item{padding:15px 20px;background:#fff4e2;border-radius:12px;margin:10px 0;font-size:18px}
+</style>
 </head>
 <body>
 
-<!-- 登录 -->
-<div class="login" id="loginBox">
-    <h2>学生登录</h2>
-    <input id="user" placeholder="输入账号即可登录">
-    <button onclick="login()">登录</button>
+<button class="back" onclick="location.href='index.html'">← 返回主页</button>
+<h1 class="title">英语学习中心</h1>
+
+<div class="container">
+  <div class="item">小学英语单词</div>
+  <div class="item">英语口语练习</div>
+  <div class="item">英语听力训练</div>
+  <div class="item">英语绘本阅读</div>
+  <div class="item">语法基础课</div>
 </div>
 
-<!-- 主界面 -->
-<div class="main" id="mainPage">
-    <div class="main-title">明舟教育 - 英语学习乐园</div>
-    <div class="resource">
-        <span>🌾 牧草: <span id="grass">0</span></span>
-        <span>💧 水分: <span id="water">0</span></span>
-    </div>
-    <div class="main-menu">
-        <button class="main-btn" onclick="openWordWise()">🎤 单词发音训练</button>
-        <button class="main-btn" onclick="openVocabLearner()">📖 阅读生词学习</button>
-        <button class="main-btn" onclick="showFarm()">🚜 我的农场牧场</button>
-        <button class="main-btn" onclick="location.href='index.html'">返回校区官网</button>
-    </div>
-</div>
-
-<!-- 发音模块 -->
-<div class="page" id="wordwisePage">
-    <button class="back-btn" onclick="backMain()">← 返回主页</button>
-    <iframe class="iframe-container" 
-        src="https://innovatewithkishlay.github.io/WordWise/" 
-        frameborder="0" allow="microphone">
-    </iframe>
-</div>
-
-<!-- 阅读模块：Vocabulary-Learner（唯一阅读模块） -->
-<div class="page" id="vocabPage">
-    <button class="back-btn" onclick="backMain()">← 返回主页</button>
-    <iframe class="iframe-container" 
-        src="https://vocab-learner.vercel.app/" 
-        frameborder="0">
-    </iframe>
-</div>
-
-<!-- 农场模块 -->
-<div class="page" id="farmPage">
-    <button class="back-btn" onclick="backMain()">← 返回主页</button>
-    <div style="background:#fff;padding:20px;border-radius:10px;text-align:center;">
-        <h2>🚜 QQ农场牧场</h2>
-        <p>学习发音/阅读可获得牧草和水分</p>
-    </div>
-</div>
-
-<script>
-let username = "";
-let userData = { grass:0, water:0 };
-
-// 登录
-function login(){
-    username = document.getElementById("user").value.trim();
-    if(!username) { alert("请输入账号"); return; }
-    loadUserData();
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("mainPage").style.display = "block";
-}
-
-// 加载数据
-function loadUserData(){
-    let d = localStorage.getItem("student_"+username);
-    if(d) userData = JSON.parse(d);
-    refreshResource();
-}
-
-// 保存数据
-function saveUserData(){
-    localStorage.setItem("student_"+username, JSON.stringify(userData));
-}
-
-// 刷新资源
-function refreshResource(){
-    document.getElementById("grass").innerText = userData.grass;
-    document.getElementById("water").innerText = userData.water;
-}
-
-// 返回主页
-function backMain(){
-    document.querySelectorAll(".page").forEach(p=>p.style.display="none");
-    document.getElementById("mainPage").style.display = "block";
-}
-
-// 打开发音
-function openWordWise(){
-    document.getElementById("mainPage").style.display = "none";
-    document.getElementById("wordwisePage").style.display = "block";
-    userData.grass += 1;
-    saveUserData();
-    refreshResource();
-}
-
-// 打开阅读（Vocabulary-Learner）
-function openVocabLearner(){
-    document.getElementById("mainPage").style.display = "none";
-    document.getElementById("vocabPage").style.display = "block";
-    userData.water += 1;
-    saveUserData();
-    refreshResource();
-}
-
-// 打开农场
-function showFarm(){
-    document.getElementById("mainPage").style.display = "none";
-    document.getElementById("farmPage").style.display = "block";
-}
-</script>
 </body>
 </html>
