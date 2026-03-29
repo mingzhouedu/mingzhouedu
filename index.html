@@ -1,41 +1,157 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<title>明舟教育 - 舟楫载梦 明灯指路</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-* {margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif;}
-html,body {width:100%;height:100%;overflow:hidden;background:linear-gradient(to bottom, #4fc3f7, #b3e5fc);}
-.header{position:absolute;top:60px;left:50%;transform:translateX(-50%);text-align:center;z-index:99;}
-.title{font-size:48px;color:#01579b;font-weight:bold;}
-.slogan{font-size:24px;color:#0288d1;margin-top:10px;}
-.sun{position:absolute;bottom:260px;left:150px;width:120px;height:120px;background:#ffeb3b;border-radius:50%;box-shadow:0 0 50px #ffeb3b;}
-.sea{position:absolute;bottom:0;width:100%;height:250px;background:#0288d1;border-top:4px solid #01579b;}
-.lighthouse{position:absolute;right:180px;bottom:240px;width:60px;height:300px;background:#fff;border-left:6px solid #333;border-right:6px solid #333;}
-.lighthouse::before{content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:30px solid #e53935;}
-.light{position:absolute;top:20px;left:50%;transform:translateX(-50%);width:20px;height:20px;background:#ffeb3b;border-radius:50%;}
-.boat{position:absolute;width:200px;height:70px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:white;background:#ff9800;border-radius:35px;cursor:pointer;transition:.3s;z-index:10;}
-.boat:hover{transform:translateY(-5px);background:#f57c00;}
-#boat1{bottom:200px;left:400px;}
-#boat2{bottom:300px;left:400px;}
-.sail{animation:sailAway 2.5s ease forwards;}
-@keyframes sailAway{0%{transform:translate(0,0);opacity:1;}70%{transform:translate(-300px,-100px);opacity:0;}100%{transform:translate(0,0);opacity:1;}}
-</style>
+    <meta charset="UTF-8">
+    <title>我的英语学习系统</title>
+    <style>
+        * {margin: 0; padding: 10px; box-sizing: border-box; font-family: Arial;}
+        .tab {overflow: hidden; border: 1px solid #ccc; background: #f1f1f1;}
+        .tab button {background: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; font-size: 17px;}
+        .tab button.active {background-color: #ccc;}
+        .tabcontent {display: none; padding: 20px; border: 1px solid #ccc; border-top: none;}
+        .box {border: 1px solid #eee; padding: 15px; margin: 10px 0; border-radius: 8px;}
+        button {background: #42b983; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin: 5px;}
+        input, textarea {width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;}
+        .word-item {display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee;}
+    </style>
 </head>
 <body>
-<div class="header"><div class="title">明舟教育</div><div class="slogan">舟楫载梦 · 明灯指路</div></div>
-<div class="sun"></div><div class="sea"></div>
-<div class="lighthouse"><div class="light"></div></div>
-<div class="boat" id="boat1" onclick="go('student.html',this)">英语学习</div>
-<div class="boat" id="boat2" onclick="go('math-index.html',this)">数学作业</div>
+    <h1>英语学习系统</h1>
+
+    <!-- 选项卡：阅读模块 / 单词系统 -->
+    <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'read')">📖 阅读训练</button>
+        <button class="tablinks" onclick="openTab(event, 'word')">📝 单词记忆</button>
+    </div>
+
+    <!-- 阅读模块 -->
+    <div id="read" class="tabcontent" style="display:block">
+        <div class="box">
+            <h3>1. 输入阅读文章</h3>
+            <textarea id="article" rows="6" placeholder="粘贴英语阅读文章..."></textarea>
+            <button onclick="extractWords()">提取单词/词组 + 拆解题目</button>
+        </div>
+
+        <div class="box">
+            <h3>2. 自动提取生词</h3>
+            <div id="wordList"></div>
+            <button onclick="syncWords()">一键同步到单词本</button>
+        </div>
+
+        <div class="box">
+            <h3>3. 阅读练习题</h3>
+            <div id="questionList"></div>
+        </div>
+    </div>
+
+    <!-- 单词系统 -->
+    <div id="word" class="tabcontent">
+        <div class="box">
+            <h3>我的单词本（自动同步+自定义）</h3>
+            <input type="text" id="addWord" placeholder="手动添加单词/词组">
+            <input type="text" id="addMean" placeholder="中文释义">
+            <button onclick="addCustomWord()">添加单词</button>
+            <div id="myWordList"></div>
+        </div>
+
+        <div class="box">
+            <h3>单词检验</h3>
+            <button onclick="startTest()">开始测试（认单词+读音）</button>
+            <div id="testArea"></div>
+        </div>
+    </div>
+
 <script>
-function go(url,el){
-    el.classList.add("sail");
-    el.style.pointerEvents="none";
-    setTimeout(()=>{el.classList.remove("sail");el.style.pointerEvents="auto";},2500);
-    setTimeout(()=>{location.href=url;},1000);
+// 全局数据
+let words = [];
+let myWords = JSON.parse(localStorage.getItem('myWords')) || [];
+
+// 切换选项卡
+function openTab(evt, tabName) {
+    document.querySelectorAll('.tabcontent').forEach(x => x.style.display = 'none');
+    document.querySelectorAll('.tablinks').forEach(x => x.classList.remove('active'));
+    document.getElementById(tabName).style.display = 'block';
+    evt.currentTarget.classList.add('active');
 }
+
+// 1. 阅读模块：提取单词 + 生成题目
+function extractWords() {
+    let text = document.getElementById('article').value.toLowerCase();
+    // 简单提取单词（过滤常用词）
+    let filterWords = ['the', 'a', 'is', 'are', 'and', 'of', 'to', 'in', 'on', 'i', 'you', 'he', 'she'];
+    words = [...new Set(text.match(/[a-z]+/g))].filter(w => w.length > 2 && !filterWords.includes(w));
+    
+    // 展示单词
+    document.getElementById('wordList').innerHTML = words.map(w => `<div>${w}</div>`).join('');
+    
+    // 自动生成练习题
+    document.getElementById('questionList').innerHTML = `
+        <p>✅ 主旨题：What is the main idea of this passage?</p>
+        <p>✅ 细节题：According to the text, ...</p>
+        <p>✅ 词义题：What does the word "${words[0]||'example'}" mean?</p>
+    `;
+}
+
+// 2. 同步阅读生词到单词本
+function syncWords() {
+    words.forEach(w => {
+        if(!myWords.some(item => item.word === w)) myWords.push({word: w, mean: ''});
+    });
+    localStorage.setItem('myWords', JSON.stringify(myWords));
+    showMyWords();
+    alert('同步成功！');
+}
+
+// 3. 单词系统：展示单词
+function showMyWords() {
+    document.getElementById('myWordList').innerHTML = myWords.map((item, idx) => `
+        <div class="word-item">
+            <span>${item.word} - ${item.mean}</span>
+            <button onclick="playVoice('${item.word}')">🔊 读音</button>
+        </div>
+    `).join('');
+}
+
+// 手动添加单词
+function addCustomWord() {
+    let word = document.getElementById('addWord').value;
+    let mean = document.getElementById('addMean').value;
+    if(word) myWords.push({word, mean});
+    localStorage.setItem('myWords', JSON.stringify(myWords));
+    showMyWords();
+    document.getElementById('addWord').value = '';
+    document.getElementById('addMean').value = '';
+}
+
+// 播放单词读音（浏览器原生发音，无需文件）
+function playVoice(word) {
+    let utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-US';
+    window.speechSynthesis.speak(utterance);
+}
+
+// 4. 单词测试：认单词 + 读音检验
+function startTest() {
+    if(myWords.length === 0) {alert('请先添加单词！'); return;}
+    let idx = Math.floor(Math.random() * myWords.length);
+    let item = myWords[idx];
+    document.getElementById('testArea').innerHTML = `
+        <p>英文：${item.word}</p>
+        <button onclick="playVoice('${item.word}')">🔊 听读音</button>
+        <input type="text" id="userAns" placeholder="输入中文释义">
+        <button onclick="checkTest(${idx})">提交答案</button>
+    `;
+}
+
+// 核对答案
+function checkTest(idx) {
+    let ans = document.getElementById('userAns').value;
+    if(ans === myWords[idx].mean) alert('✅ 正确！');
+    else alert(`❌ 错误，正确答案：${myWords[idx].mean}`);
+}
+
+// 初始化
+showMyWords();
 </script>
 </body>
 </html>
