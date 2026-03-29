@@ -135,24 +135,19 @@ html, body {
 <div class="sea"></div>
 <div class="lighthouse"><div class="light"></div></div>
 
-<!-- ✅ 这里 100% 保留你原本的跳转目标！！！ -->
 <div class="boat" id="boat1" onclick="go('student.html',this)">英语学习</div>
 <div class="boat" id="boat2" onclick="go('math-index.html',this)">数学作业</div>
 
 <script>
 function go(url, el) {
-  // 播放动画
   el.classList.add("sail");
-  // 防止重复点击
   el.style.pointerEvents = "none";
-
-  // 动画结束后恢复按钮
+  
   setTimeout(() => {
     el.classList.remove("sail");
     el.style.pointerEvents = "auto";
   }, 2500);
 
-  // ✅ 直接跳转到你已有的功能页面，完全不改动、不替换！
   setTimeout(() => {
     location.href = url;
   }, 1000);
