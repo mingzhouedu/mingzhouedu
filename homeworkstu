@@ -2,30 +2,156 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>数学作业 - 明舟教育</title>
+<title>明舟教育 - 舟楫载梦 明灯指路</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif}
-body{background:#e3f2fd;padding:40px 20px}
-.title{text-align:center;font-size:36px;color:#0d47a1;margin-bottom:30px}
-.back{position:fixed;top:20px;left:20px;padding:12px 24px;background:#0288d1;color:white;border-radius:30px;cursor:pointer;font-size:16px}
-.container{max-width:800px;margin:0 auto;background:white;padding:30px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
-.item{padding:15px 20px;background:#f5f9ff;border-radius:12px;margin:10px 0;font-size:18px}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Microsoft YaHei", sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #4fc3f7, #b3e5fc);
+  position: relative;
+}
+
+.header {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 99;
+}
+.title {
+  font-size: 48px;
+  color: #01579b;
+  font-weight: bold;
+}
+.slogan {
+  font-size: 24px;
+  color: #0288d1;
+  margin-top: 10px;
+}
+
+.sun {
+  position: absolute;
+  bottom: 260px;
+  left: 150px;
+  width: 120px;
+  height: 120px;
+  background: #ffeb3b;
+  border-radius: 50%;
+  box-shadow: 0 0 50px #ffeb3b;
+}
+
+.sea {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 250px;
+  background: #0288d1;
+  border-top: 4px solid #01579b;
+}
+
+.lighthouse {
+  position: absolute;
+  right: 180px;
+  bottom: 240px;
+  width: 60px;
+  height: 300px;
+  background: #ffffff;
+  border-left: 6px solid #333;
+  border-right: 6px solid #333;
+}
+.lighthouse::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 30px solid #e53935;
+}
+.light {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  background: #ffeb3b;
+  border-radius: 50%;
+}
+
+.boat {
+  position: absolute;
+  width: 200px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  background: #ff9800;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 10;
+}
+.boat:hover {
+  transform: translateY(-5px);
+  background: #f57c00;
+}
+
+#boat1 { bottom: 200px; left: 400px; }
+#boat2 { bottom: 300px; left: 400px; }
+
+.sail {
+  animation: sailAway 2.5s ease forwards;
+}
+@keyframes sailAway {
+  0%   { transform: translate(0,0); opacity: 1; }
+  70%  { transform: translate(-300px, -100px); opacity: 0; }
+  100% { transform: translate(0,0); opacity: 1; }
+}
 </style>
 </head>
 <body>
 
-<button class="back" onclick="location.href='index.html'">← 返回主页</button>
-<h1 class="title">数学作业中心</h1>
-
-<div class="container">
-  <div class="item">一年级数学作业</div>
-  <div class="item">二年级数学作业</div>
-  <div class="item">三年级数学作业</div>
-  <div class="item">四年级数学作业</div>
-  <div class="item">五年级数学作业</div>
-  <div class="item">六年级数学作业</div>
+<div class="header">
+  <div class="title">明舟教育</div>
+  <div class="slogan">舟楫载梦 · 明灯指路</div>
 </div>
 
+<div class="sun"></div>
+<div class="sea"></div>
+<div class="lighthouse"><div class="light"></div></div>
+
+<div class="boat" id="boat1" onclick="go('student.html',this)">英语学习</div>
+<div class="boat" id="boat2" onclick="go('math-index.html',this)">数学作业</div>
+
+<script>
+function go(url, el) {
+  el.classList.add("sail");
+  el.style.pointerEvents = "none";
+  
+  setTimeout(() => {
+    el.classList.remove("sail");
+    el.style.pointerEvents = "auto";
+  }, 2500);
+
+  setTimeout(() => {
+    location.href = url;
+  }, 1000);
+}
+</script>
 </body>
 </html>
