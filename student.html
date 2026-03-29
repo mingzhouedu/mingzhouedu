@@ -2,14 +2,52 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>英语学习</title>
-<style>*{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑}body{background:#fff8e1;padding:30px}.back{padding:10px 20px;background:#ff9800;color:#fff;border-radius:30px;cursor:pointer;margin-bottom:20px}.container{max-width:800px;margin:0 auto}.card{background:#fff;padding:25px;border-radius:16px;margin-bottom:20px}h2{color:#e65100;margin-bottom:15px}.word{font-size:22px;margin:10px 0}</style>
+<title>英语学习系统 - 明舟教育</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif;}
+body{background:#fff8e1;padding:30px;}
+.back-btn{padding:12px 24px;background:#ff9800;color:white;border-radius:30px;cursor:pointer;border:none;font-size:16px;margin-bottom:20px;}
+.container{max-width:900px;margin:0 auto;}
+.card{background:white;padding:30px;border-radius:20px;box-shadow:0 4px 15px rgba(0,0,0,0.1);margin-bottom:25px;}
+.card h2{color:#e65100;margin-bottom:20px;font-size:26px;}
+.word-card{display:inline-block;width:200px;height:120px;background:#fff4e2;margin:10px;border-radius:12px;text-align:center;line-height:120px;font-size:22px;font-weight:bold;cursor:pointer;}
+.reading-area{font-size:18px;line-height:1.8;color:#333;padding:15px;background:#fdf6e3;border-radius:10px;}
+.play-btn{padding:8px 16px;background:#0288d1;color:white;border:none;border-radius:20px;margin-left:10px;cursor:pointer;}
+</style>
 </head>
 <body>
-<div class="back" onclick="location.href='index.html'">← 返回主页</div>
+<button class="back-btn" onclick="location.href='index.html'">← 返回主页</button>
 <div class="container">
-<div class="card"><h2>单词记忆</h2><div class="word">apple - 苹果</div><div class="word">banana - 香蕉</div></div>
-<div class="card"><h2>英语阅读</h2><p>I like apples. They are red and round.</p></div>
+    <div class="card">
+        <h2>单词记忆卡（点击发音）</h2>
+        <div class="word-card" onclick="speak('apple')">apple 苹果</div>
+        <div class="word-card" onclick="speak('banana')">banana 香蕉</div>
+        <div class="word-card" onclick="speak('orange')">orange 橙子</div>
+        <div class="word-card" onclick="speak('student')">student 学生</div>
+    </div>
+    <div class="card">
+        <h2>英语小阅读 <button class="play-btn" onclick="speakRead()">朗读全文</button></h2>
+        <div class="reading-area" id="readText">
+            I am a student. I like to read books. I have many fruits.
+            Apples are red. Bananas are yellow. Oranges are orange.
+            I love English very much.
+        </div>
+    </div>
 </div>
+<script>
+// 我们之前约定的Web Speech API发音功能（原生开源，无外部依赖）
+function speak(word){
+    let utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-US';
+    window.speechSynthesis.speak(utterance);
+}
+function speakRead(){
+    let text = document.getElementById('readText').innerText;
+    let utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    window.speechSynthesis.speak(utterance);
+}
+</script>
 </body>
 </html>
