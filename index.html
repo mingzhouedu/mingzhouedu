@@ -2,156 +2,412 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>我的英语学习系统</title>
+    <title>英语学习系统</title>
     <style>
-        * {margin: 0; padding: 10px; box-sizing: border-box; font-family: Arial;}
-        .tab {overflow: hidden; border: 1px solid #ccc; background: #f1f1f1;}
-        .tab button {background: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; font-size: 17px;}
-        .tab button.active {background-color: #ccc;}
-        .tabcontent {display: none; padding: 20px; border: 1px solid #ccc; border-top: none;}
-        .box {border: 1px solid #eee; padding: 15px; margin: 10px 0; border-radius: 8px;}
-        button {background: #42b983; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin: 5px;}
-        input, textarea {width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;}
-        .word-item {display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee;}
+        * {
+            margin: 0;
+            padding: 8px;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        /* 登录页面 */
+        .login-box {
+            width: 400px;
+            margin: 80px auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #eee;
+        }
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #2d8cf0;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button.danger {
+            background: #f56c6c;
+        }
+        .title {
+            text-align: center;
+            padding: 15px;
+            background: #f5f7fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        /* 模块卡片 */
+        .card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .card h3 {
+            border-left: 4px solid #2d8cf0;
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+        /* 列表样式 */
+        .item {
+            padding: 8px;
+            border-bottom: 1px solid #f5f5f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* 隐藏模块 */
+        .hide {
+            display: none;
+        }
+        /* 按钮小样式 */
+        .mini-btn {
+            width: auto;
+            padding: 5px 10px;
+            margin: 0 3px;
+        }
     </style>
 </head>
 <body>
-    <h1>英语学习系统</h1>
-
-    <!-- 选项卡：阅读模块 / 单词系统 -->
-    <div class="tab">
-        <button class="tablinks active" onclick="openTab(event, 'read')">📖 阅读训练</button>
-        <button class="tablinks" onclick="openTab(event, 'word')">📝 单词记忆</button>
+<div class="container">
+    <!-- ====================================== -->
+    <!-- 1. 登录页面（默认显示） -->
+    <!-- ====================================== -->
+    <div id="loginPage" class="login-box">
+        <h2>系统登录</h2>
+        <select id="role">
+            <option value="teacher">教师端</option>
+            <option value="student">学生端</option>
+        </select>
+        <input type="text" id="account" placeholder="账号">
+        <input type="password" id="pwd" placeholder="密码">
+        <button onclick="login()">登录</button>
     </div>
 
-    <!-- 阅读模块 -->
-    <div id="read" class="tabcontent" style="display:block">
-        <div class="box">
-            <h3>1. 输入阅读文章</h3>
-            <textarea id="article" rows="6" placeholder="粘贴英语阅读文章..."></textarea>
-            <button onclick="extractWords()">提取单词/词组 + 拆解题目</button>
+    <!-- ====================================== -->
+    <!-- 2. 教师端（登录后显示） -->
+    <!-- ====================================== -->
+    <div id="teacherPage" class="hide">
+        <div class="title">
+            <h1>教师管理控制台</h1>
+            <button class="mini-btn danger" onclick="logout()">退出登录</button>
         </div>
 
-        <div class="box">
-            <h3>2. 自动提取生词</h3>
+        <!-- 教师功能1：班级管理 -->
+        <div class="card">
+            <h3>📚 班级管理</h3>
+            <input type="text" id="className" placeholder="输入班级名称（如：初一1班）">
+            <button onclick="addClass()">新增班级</button>
+            <div id="classList"></div>
+        </div>
+
+        <!-- 教师功能2：学生管理 -->
+        <div class="card">
+            <h3>👨‍🎓 学生管理</h3>
+            <input type="text" id="stuName" placeholder="学生姓名">
+            <input type="text" id="stuAccount" placeholder="学生账号（用于登录）">
+            <input type="password" id="stuPwd" placeholder="学生密码">
+            <select id="stuClass"></select>
+            <button onclick="addStudent()">添加学生</button>
+            <div id="stuList"></div>
+        </div>
+
+        <!-- 教师功能3：词书&单词管理 -->
+        <div class="card">
+            <h3>📖 词书与单词管理</h3>
+            <select id="bookClass"></select>
+            <input type="text" id="bookName" placeholder="词书名称（如：七年级上册单词）">
+            <button onclick="addBook()">创建词书</button>
+            
+            <hr>
+            <h4>添加单词到词书</h4>
+            <select id="selectBook"></select>
+            <input type="text" id="word" placeholder="英文单词/词组">
+            <input type="text" id="wordMean" placeholder="中文释义">
+            <button onclick="addWordToBook()">添加单词</button>
             <div id="wordList"></div>
-            <button onclick="syncWords()">一键同步到单词本</button>
-        </div>
-
-        <div class="box">
-            <h3>3. 阅读练习题</h3>
-            <div id="questionList"></div>
         </div>
     </div>
 
-    <!-- 单词系统 -->
-    <div id="word" class="tabcontent">
-        <div class="box">
-            <h3>我的单词本（自动同步+自定义）</h3>
-            <input type="text" id="addWord" placeholder="手动添加单词/词组">
-            <input type="text" id="addMean" placeholder="中文释义">
-            <button onclick="addCustomWord()">添加单词</button>
-            <div id="myWordList"></div>
+    <!-- ====================================== -->
+    <!-- 3. 学生端（登录后显示） -->
+    <!-- ====================================== -->
+    <div id="studentPage" class="hide">
+        <div class="title">
+            <h1>学生学习中心</h1>
+            <button class="mini-btn danger" onclick="logout()">退出登录</button>
         </div>
 
-        <div class="box">
-            <h3>单词检验</h3>
-            <button onclick="startTest()">开始测试（认单词+读音）</button>
+        <!-- 学生功能1：查看老师分配的词书 -->
+        <div class="card">
+            <h3>📚 我的词书</h3>
+            <select id="studentBook"></select>
+            <button onclick="loadStudentWords()">查看单词</button>
+            <div id="studentWordList"></div>
+        </div>
+
+        <!-- 学生功能2：认单词 + 听音读单词 -->
+        <div class="card">
+            <h3>✅ 单词测试（认+读）</h3>
+            <button onclick="startStudentTest()">开始测试</button>
             <div id="testArea"></div>
         </div>
     </div>
+</div>
 
 <script>
-// 全局数据
-let words = [];
-let myWords = JSON.parse(localStorage.getItem('myWords')) || [];
+// ==========================
+// 全局数据（本地永久存储）
+// ==========================
+let data = JSON.parse(localStorage.getItem('englishSystem')) || {
+    // 固定教师账号
+    teacher: { account: "teacher", pwd: "123456" },
+    // 班级
+    classes: [],
+    // 学生
+    students: [],
+    // 词书
+    books: [],
+    // 单词
+    words: []
+};
 
-// 切换选项卡
-function openTab(evt, tabName) {
-    document.querySelectorAll('.tabcontent').forEach(x => x.style.display = 'none');
-    document.querySelectorAll('.tablinks').forEach(x => x.classList.remove('active'));
-    document.getElementById(tabName).style.display = 'block';
-    evt.currentTarget.classList.add('active');
+// 当前登录用户
+let currentUser = null;
+
+// ==========================
+// 1. 登录/退出功能
+// ==========================
+function login() {
+    let role = document.getElementById('role').value;
+    let account = document.getElementById('account').value;
+    let pwd = document.getElementById('pwd').value;
+
+    // 教师登录
+    if(role === 'teacher') {
+        if(account === data.teacher.account && pwd === data.teacher.pwd) {
+            currentUser = {role:'teacher'};
+            showPage('teacher');
+            initTeacherPage();
+            return;
+        }
+    }
+
+    // 学生登录
+    if(role === 'student') {
+        let stu = data.students.find(s=>s.account === account && s.pwd === pwd);
+        if(stu) {
+            currentUser = {role:'student', info:stu};
+            showPage('student');
+            initStudentPage();
+            return;
+        }
+    }
+    alert('账号或密码错误！');
 }
 
-// 1. 阅读模块：提取单词 + 生成题目
-function extractWords() {
-    let text = document.getElementById('article').value.toLowerCase();
-    // 简单提取单词（过滤常用词）
-    let filterWords = ['the', 'a', 'is', 'are', 'and', 'of', 'to', 'in', 'on', 'i', 'you', 'he', 'she'];
-    words = [...new Set(text.match(/[a-z]+/g))].filter(w => w.length > 2 && !filterWords.includes(w));
-    
-    // 展示单词
-    document.getElementById('wordList').innerHTML = words.map(w => `<div>${w}</div>`).join('');
-    
-    // 自动生成练习题
-    document.getElementById('questionList').innerHTML = `
-        <p>✅ 主旨题：What is the main idea of this passage?</p>
-        <p>✅ 细节题：According to the text, ...</p>
-        <p>✅ 词义题：What does the word "${words[0]||'example'}" mean?</p>
-    `;
+// 退出登录
+function logout() {
+    currentUser = null;
+    showPage('login');
 }
 
-// 2. 同步阅读生词到单词本
-function syncWords() {
-    words.forEach(w => {
-        if(!myWords.some(item => item.word === w)) myWords.push({word: w, mean: ''});
+// 切换页面
+function showPage(type) {
+    document.getElementById('loginPage').classList.add('hide');
+    document.getElementById('teacherPage').classList.add('hide');
+    document.getElementById('studentPage').classList.add('hide');
+    document.getElementById(type+'Page').classList.remove('hide');
+}
+
+// 保存数据到本地
+function saveData() {
+    localStorage.setItem('englishSystem', JSON.stringify(data));
+}
+
+// ==========================
+// 2. 教师端功能
+// ==========================
+// 初始化教师页面
+function initTeacherPage() {
+    renderClass();
+    renderStudent();
+    renderBook();
+}
+
+// 班级管理 - 新增
+function addClass() {
+    let name = document.getElementById('className').value;
+    if(!name) return alert('请输入班级名');
+    data.classes.push({id:Date.now(), name});
+    saveData();
+    renderClass();
+    document.getElementById('className').value = '';
+}
+
+// 渲染班级列表
+function renderClass() {
+    let dom = '';
+    data.classes.forEach(item=>{
+        dom += `<div class="item">${item.name}</div>`;
     });
-    localStorage.setItem('myWords', JSON.stringify(myWords));
-    showMyWords();
-    alert('同步成功！');
+    document.getElementById('classList').innerHTML = dom;
+
+    // 绑定到学生/词书下拉框
+    let sel = `<option value="">选择班级</option>`;
+    data.classes.forEach(item=>{
+        sel += `<option value="${item.id}">${item.name}</option>`;
+    });
+    document.getElementById('stuClass').innerHTML = sel;
+    document.getElementById('bookClass').innerHTML = sel;
 }
 
-// 3. 单词系统：展示单词
-function showMyWords() {
-    document.getElementById('myWordList').innerHTML = myWords.map((item, idx) => `
-        <div class="word-item">
-            <span>${item.word} - ${item.mean}</span>
-            <button onclick="playVoice('${item.word}')">🔊 读音</button>
-        </div>
-    `).join('');
+// 学生管理 - 新增
+function addStudent() {
+    let name = document.getElementById('stuName').value;
+    let account = document.getElementById('stuAccount').value;
+    let pwd = document.getElementById('stuPwd').value;
+    let classId = document.getElementById('stuClass').value;
+    if(!name||!account||!pwd||!classId) return alert('请填写完整信息');
+    
+    data.students.push({
+        id:Date.now(), name, account, pwd, classId
+    });
+    saveData();
+    renderStudent();
+    document.getElementById('stuName').value='';
+    document.getElementById('stuAccount').value='';
+    document.getElementById('stuPwd').value='';
 }
 
-// 手动添加单词
-function addCustomWord() {
-    let word = document.getElementById('addWord').value;
-    let mean = document.getElementById('addMean').value;
-    if(word) myWords.push({word, mean});
-    localStorage.setItem('myWords', JSON.stringify(myWords));
-    showMyWords();
-    document.getElementById('addWord').value = '';
-    document.getElementById('addMean').value = '';
+// 渲染学生列表
+function renderStudent() {
+    let dom = '';
+    data.students.forEach(stu=>{
+        let className = data.classes.find(c=>c.id==stu.classId)?.name || '无班级';
+        dom += `<div class="item">${stu.name} | 账号：${stu.account} | ${className}</div>`;
+    });
+    document.getElementById('stuList').innerHTML = dom;
 }
 
-// 播放单词读音（浏览器原生发音，无需文件）
+// 词书管理 - 创建
+function addBook() {
+    let classId = document.getElementById('bookClass').value;
+    let name = document.getElementById('bookName').value;
+    if(!classId||!name) return alert('请选择班级+填写词书名');
+    
+    data.books.push({
+        id:Date.now(), classId, name
+    });
+    saveData();
+    renderBook();
+    document.getElementById('bookName').value='';
+}
+
+// 渲染词书
+function renderBook() {
+    let sel = `<option value="">选择词书</option>`;
+    data.books.forEach(book=>{
+        let className = data.classes.find(c=>c.id==book.classId)?.name;
+        sel += `<option value="${book.id}">${className} - ${book.name}</option>`;
+    });
+    document.getElementById('selectBook').innerHTML = sel;
+}
+
+// 添加单词到词书
+function addWordToBook() {
+    let bookId = document.getElementById('selectBook').value;
+    let word = document.getElementById('word').value;
+    let mean = document.getElementById('wordMean').value;
+    if(!bookId||!word||!mean) return alert('填写完整');
+    
+    data.words.push({bookId, word, mean});
+    saveData();
+    renderWordList(bookId);
+    document.getElementById('word').value='';
+    document.getElementById('wordMean').value='';
+}
+
+// 渲染单词列表
+function renderWordList(bookId) {
+    let dom = '';
+    data.words.filter(w=>w.bookId==bookId).forEach(item=>{
+        dom += `<div class="item">${item.word} → ${item.mean}</div>`;
+    });
+    document.getElementById('wordList').innerHTML = dom;
+}
+
+// ==========================
+// 3. 学生端功能
+// ==========================
+// 初始化学生页面
+function initStudentPage() {
+    // 加载学生班级的词书
+    let classId = currentUser.info.classId;
+    let sel = `<option value="">选择词书</option>`;
+    data.books.filter(b=>b.classId==classId).forEach(book=>{
+        sel += `<option value="${book.id}">${book.name}</option>`;
+    });
+    document.getElementById('studentBook').innerHTML = sel;
+}
+
+// 学生查看单词
+function loadStudentWords() {
+    let bookId = document.getElementById('studentBook').value;
+    let dom = '';
+    data.words.filter(w=>w.bookId==bookId).forEach(item=>{
+        dom += `<div class="item">${item.word} → ${item.mean} 
+                    <button class="mini-btn" onclick="playVoice('${item.word}')">🔊 读音</button>
+                </div>`;
+    });
+    document.getElementById('studentWordList').innerHTML = dom;
+}
+
+// 播放单词发音
 function playVoice(word) {
-    let utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = 'en-US';
-    window.speechSynthesis.speak(utterance);
+    let u = new SpeechSynthesisUtterance(word);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
 }
 
-// 4. 单词测试：认单词 + 读音检验
-function startTest() {
-    if(myWords.length === 0) {alert('请先添加单词！'); return;}
-    let idx = Math.floor(Math.random() * myWords.length);
-    let item = myWords[idx];
+// 学生单词测试（认单词 + 听音）
+function startStudentTest() {
+    let bookId = document.getElementById('studentBook').value;
+    let words = data.words.filter(w=>w.bookId==bookId);
+    if(words.length===0) return alert('词书为空');
+    
+    let rand = words[Math.floor(Math.random()*words.length)];
     document.getElementById('testArea').innerHTML = `
-        <p>英文：${item.word}</p>
-        <button onclick="playVoice('${item.word}')">🔊 听读音</button>
-        <input type="text" id="userAns" placeholder="输入中文释义">
-        <button onclick="checkTest(${idx})">提交答案</button>
+        <div class="card">
+            <p>英文：${rand.word}</p>
+            <button class="mini-btn" onclick="playVoice('${rand.word}')">🔊 听读音</button>
+            <input type="text" id="userAns" placeholder="输入中文释义">
+            <button onclick="checkAns('${rand.mean}')">提交</button>
+        </div>
     `;
 }
 
 // 核对答案
-function checkTest(idx) {
+function checkAns(right) {
     let ans = document.getElementById('userAns').value;
-    if(ans === myWords[idx].mean) alert('✅ 正确！');
-    else alert(`❌ 错误，正确答案：${myWords[idx].mean}`);
+    if(ans === right) alert('✅ 回答正确！');
+    else alert(`❌ 错误，正确答案：${right}`);
 }
-
-// 初始化
-showMyWords();
 </script>
 </body>
 </html>
