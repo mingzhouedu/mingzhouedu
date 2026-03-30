@@ -2,12 +2,19 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>明舟教育 - 统一登录</title>
+    <title>明舟教育 - 单文件完整版</title>
     <style>
         * {box-sizing: border-box; margin: 0; padding: 0;}
         body {
             font-family: "Microsoft YaHei", sans-serif;
             background: #f5f7fa;
+            margin: 0;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* 登录页 */
+        .login-container {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,7 +27,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
-        h2 {
+        .login-box h2 {
             text-align: center;
             color: #165DFF;
             margin-bottom: 35px;
@@ -34,107 +41,436 @@
             border-radius: 6px;
             font-size: 15px;
         }
-        .login-btn {
-            width: 100%;
-            padding: 13px;
-            margin-top: 15px;
-            background: #165DFF;
-            color: white;
+        .btn {
+            padding: 10px 25px;
             border: none;
             border-radius: 6px;
-            font-size: 16px;
             cursor: pointer;
-            transition: 0.2s;
+            margin: 5px;
+            font-size: 15px;
         }
-        .login-btn:hover {
-            background: #0d47a1;
+        .btn-primary { background: #165DFF; color: white; }
+        .btn-success { background: #42b983; color: white; }
+        .btn-warning { background: #F98000; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .login-btn { width: 100%; padding: 13px; margin-top: 15px; background: #165DFF; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
+        .test-tip { margin-top: 25px; text-align: center; color: #666; font-size: 14px; line-height: 1.8; }
+
+        /* 通用头部 */
+        .header {
+            background: #165DFF;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .test-tip {
-            margin-top: 25px;
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            line-height: 1.8;
+        .header.math { background: #28a745; }
+        .nav-group { display: flex; gap: 15px; }
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
         }
+        .nav-btn:hover { background: white; color: #165DFF; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .card h3 { color: #165DFF; margin-bottom: 20px; font-weight: 600; }
+        .word-card { border: 1px solid #e0e0e0; padding: 25px; border-radius: 8px; margin: 15px 0; }
+        .question-block { margin: 15px 0; padding: 15px; border: 1px solid #e0e0e0; border-radius: 6px; }
+        .module-page { display: none; }
+        .module-page.active { display: block; }
+
+        /* 教师端侧边栏 */
+        .sidebar {
+            width: 230px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: white;
+            border-right: 1px solid #eee;
+            padding: 30px 15px;
+        }
+        .sidebar h4 { color: #165DFF; margin-bottom: 30px; font-weight: 600; }
+        .sidebar.math { background: #28a745; color: white; }
+        .sidebar.math h4 { color: white; }
+        .nav-item { padding: 12px 15px; margin: 4px 0; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .nav-item.active, .nav-item:hover { background: #E6F4FF; color: #165DFF; }
+        .sidebar.math .nav-item.active, .sidebar.math .nav-item:hover { background: rgba(255,255,255,0.2); }
+        .content { margin-left: 230px; padding: 40px; }
+        .list-group-item { padding: 12px 15px; border-bottom: 1px solid #eee; }
+        .tab-page { display: none; }
+        .tab-page.active { display: block; }
     </style>
 </head>
 <body>
-    <div class="login-box">
-        <h2>明舟教育学习系统</h2>
-        <select id="login-role">
-            <option value="student">👨‍🎓 学生端</option>
-            <option value="teacher">👨‍🏫 教师端</option>
-        </select>
-        <input type="text" id="login-account" placeholder="请输入账号">
-        <input type="password" id="login-pwd" placeholder="请输入密码">
-        <button class="login-btn" onclick="handleLogin()">登录系统</button>
-        <div class="test-tip">
-            测试账号：<br>
-            学生：student / 123456<br>
-            教师：teacher / 123456
+
+<!-- ======================================
+     页面1：统一登录页
+======================================= -->
+<div id="page-login" class="page active">
+    <div class="login-container">
+        <div class="login-box">
+            <h2>明舟教育学习系统</h2>
+            <select id="login-role">
+                <option value="student">👨‍🎓 学生端</option>
+                <option value="teacher">👨‍🏫 教师端</option>
+            </select>
+            <input type="text" id="login-account" placeholder="请输入账号">
+            <input type="password" id="login-pwd" placeholder="请输入密码">
+            <button class="login-btn" onclick="handleLogin()">登录系统</button>
+            <div class="test-tip">
+                测试账号：<br>
+                学生：student / 123456<br>
+                教师：teacher / 123456
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // ====================== 简化版登录逻辑（直接写在index里，不依赖common.js） ======================
-        // 硬编码测试账号，确保能登录
-        const testAccounts = {
-            teacher: { account: "teacher", pwd: "123456" },
-            students: [
-                { account: "student", pwd: "123456" }
+<!-- ======================================
+     页面2：学生端-功能选择页
+======================================= -->
+<div id="page-student-menu" class="page">
+    <div class="header">
+        <h2>学生学习中心</h2>
+        <div class="nav-group">
+            <button class="nav-btn" onclick="showPage('page-login')">退出登录</button>
+        </div>
+    </div>
+    <div class="container" style="text-align: center; margin-top: 100px;">
+        <h2 style="margin-bottom: 50px;">请选择学习模块</h2>
+        <button class="btn btn-primary" style="font-size: 20px; padding: 25px 50px; margin: 10px;" onclick="showPage('page-student-english')">📖 英语学习</button>
+        <button class="btn btn-success" style="font-size: 20px; padding: 25px 50px; margin: 10px;" onclick="showPage('page-student-math')">📐 数学作业</button>
+    </div>
+</div>
+
+<!-- ======================================
+     页面3：学生端-英语学习
+======================================= -->
+<div id="page-student-english" class="page">
+    <div class="header">
+        <h2>📖 英语学习中心</h2>
+        <div class="nav-group">
+            <button class="nav-btn" onclick="switchEnglishModule('word')">单词学习</button>
+            <button class="nav-btn" onclick="switchEnglishModule('reading')">阅读训练</button>
+            <button class="nav-btn" onclick="switchEnglishModule('review')">复习本</button>
+            <button class="nav-btn" onclick="showPage('page-student-menu')">返回</button>
+        </div>
+    </div>
+    <div class="container">
+        <div id="eng-word-module" class="module-page active">
+            <div class="card">
+                <h3>单词学习</h3>
+                <button class="btn btn-primary" onclick="startEngWord()">开始学习新单词</button>
+            </div>
+            <div id="eng-word-area"></div>
+        </div>
+        <div id="eng-reading-module" class="module-page">
+            <div class="card">
+                <h3>阅读训练</h3>
+                <button class="btn btn-primary" onclick="startEngReading()">开始阅读</button>
+            </div>
+            <div id="eng-reading-area"></div>
+        </div>
+        <div id="eng-review-module" class="module-page">
+            <div class="card">
+                <h3>艾宾浩斯复习本</h3>
+                <p>当前没有待复习的单词</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================
+     页面4：学生端-数学作业
+======================================= -->
+<div id="page-student-math" class="page">
+    <div class="header math">
+        <h2>📐 数学作业中心</h2>
+        <div class="nav-group">
+            <button class="nav-btn" onclick="showPage('page-student-menu')">返回</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h3>我的数学作业</h3>
+            <p>暂无布置的数学作业</p>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================
+     页面5：教师端-功能选择页
+======================================= -->
+<div id="page-teacher-menu" class="page">
+    <div class="header">
+        <h2>教师管理中心</h2>
+        <div class="nav-group">
+            <button class="nav-btn" onclick="showPage('page-login')">退出登录</button>
+        </div>
+    </div>
+    <div class="container" style="text-align: center; margin-top: 100px;">
+        <h2 style="margin-bottom: 50px;">请选择管理模块</h2>
+        <button class="btn btn-primary" style="font-size: 20px; padding: 25px 50px; margin: 10px;" onclick="showPage('page-teacher-english')">📖 英语管理</button>
+        <button class="btn btn-success" style="font-size: 20px; padding: 25px 50px; margin: 10px;" onclick="showPage('page-teacher-math')">📐 数学管理</button>
+    </div>
+</div>
+
+<!-- ======================================
+     页面6：教师端-英语管理
+======================================= -->
+<div id="page-teacher-english" class="page">
+    <div class="sidebar">
+        <h4>📖 英语管理后台</h4>
+        <div class="nav-item active" onclick="switchTeacherEngTab('student')">👨‍🎓 学生管理</div>
+        <div class="nav-item" onclick="switchTeacherEngTab('word')">📖 词库管理</div>
+        <div class="nav-item" onclick="switchTeacherEngTab('reading')">📄 阅读管理</div>
+        <div class="nav-item" onclick="showPage('page-teacher-menu')">🏠 返回管理首页</div>
+        <div class="nav-item text-danger" onclick="showPage('page-login')" style="margin-top: 50px;">🚪 退出登录</div>
+    </div>
+    <div class="content">
+        <div id="t-eng-student-tab" class="tab-page active">
+            <h3 class="mb-3 text-secondary">学生管理</h3>
+            <div class="card">
+                <h5>学生列表</h5>
+                <div class="list-group-item">测试学生 | 账号：student</div>
+            </div>
+        </div>
+        <div id="t-eng-word-tab" class="tab-page">
+            <h3 class="mb-3 text-secondary">词库管理</h3>
+            <div class="card">
+                <h5>词库列表</h5>
+                <div class="list-group-item">accomplish /əˈkʌmplɪʃ/ → 完成；实现</div>
+                <div class="list-group-item">adequate /ˈædɪkwət/ → 足够的；适当的</div>
+            </div>
+        </div>
+        <div id="t-eng-reading-tab" class="tab-page">
+            <h3 class="mb-3 text-secondary">阅读管理</h3>
+            <div class="card">
+                <h5>阅读素材列表</h5>
+                <div class="list-group-item">My School Life</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================
+     页面7：教师端-数学管理
+======================================= -->
+<div id="page-teacher-math" class="page">
+    <div class="sidebar math">
+        <h4>📐 数学作业管理</h4>
+        <div class="nav-item active" onclick="switchTeacherMathTab('publish')">📝 发布作业</div>
+        <div class="nav-item" onclick="switchTeacherMathTab('list')">📋 作业列表</div>
+        <div class="nav-item" onclick="showPage('page-teacher-menu')">🏠 返回管理首页</div>
+        <div class="nav-item" onclick="showPage('page-login')" style="margin-top: 50px;">🚪 退出登录</div>
+    </div>
+    <div class="content">
+        <div id="t-math-publish-tab" class="tab-page active">
+            <h3 class="mb-3 text-secondary">发布数学作业</h3>
+            <div class="card">
+                <h5>作业发布功能</h5>
+                <p>此处可发布数学作业</p>
+            </div>
+        </div>
+        <div id="t-math-list-tab" class="tab-page">
+            <h3 class="mb-3 text-secondary">已发布作业</h3>
+            <div class="card">
+                <p>暂无发布的作业</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ====================== 全局数据 ======================
+    const systemData = {
+        english: {
+            words: [
+                { word: "accomplish", phonetic: "/əˈkʌmplɪʃ/", meaning: "完成；实现", derivative: "accomplishment", synonym: "complete", antonym: "fail" },
+                { word: "adequate", phonetic: "/ˈædɪkwət/", meaning: "足够的；适当的", derivative: "adequacy", synonym: "enough", antonym: "inadequate" }
+            ],
+            readings: [
+                { title: "My School Life", content: "My school life is very interesting. I go to school at 8 every morning. We have many classes, like English, math and history. I like English best.", questions: [] }
             ]
-        };
+        }
+    };
 
-        function handleLogin() {
-            const role = document.getElementById('login-role').value;
-            const account = document.getElementById('login-account').value.trim();
-            const pwd = document.getElementById('login-pwd').value.trim();
+    let currentEngWord = null;
+    let engWordStep = 0;
 
-            // 简单校验
-            if(!account || !pwd) {
-                alert('请输入账号和密码');
+    // ====================== 页面切换核心函数 ======================
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    // ====================== 登录逻辑 ======================
+    function handleLogin() {
+        const role = document.getElementById('login-role').value;
+        const account = document.getElementById('login-account').value.trim();
+        const pwd = document.getElementById('login-pwd').value.trim();
+
+        if(!account || !pwd) { alert('请输入账号和密码'); return; }
+
+        // 教师登录
+        if(role === 'teacher') {
+            if(account === 'teacher' && pwd === '123456') {
+                showPage('page-teacher-menu');
+                return;
+            } else {
+                alert('教师账号或密码错误');
                 return;
             }
+        }
 
-            // 教师登录
-            if(role === 'teacher') {
-                if(account === testAccounts.teacher.account && pwd === testAccounts.teacher.pwd) {
-                    // 保存登录状态
-                    sessionStorage.setItem('currentUser', JSON.stringify({ role: 'teacher', account }));
-                    // 选择学科
-                    const choose = confirm('【确定】进入英语管理\n【取消】进入数学管理');
-                    if(choose) {
-                        window.location.href = 'teacher-english.html';
-                    } else {
-                        window.location.href = 'teacher-math.html';
-                    }
-                    return;
-                } else {
-                    alert('教师账号或密码错误');
-                    return;
-                }
-            }
-
-            // 学生登录
-            if(role === 'student') {
-                const validStudent = testAccounts.students.find(s => s.account === account && s.pwd === pwd);
-                if(validStudent) {
-                    // 保存登录状态
-                    sessionStorage.setItem('currentUser', JSON.stringify({ role: 'student', account }));
-                    // 选择学科
-                    const choose = confirm('【确定】进入英语学习\n【取消】进入数学作业');
-                    if(choose) {
-                        window.location.href = 'student-english.html';
-                    } else {
-                        window.location.href = 'student-math.html';
-                    }
-                    return;
-                } else {
-                    alert('学生账号或密码错误');
-                    return;
-                }
+        // 学生登录
+        if(role === 'student') {
+            if(account === 'student' && pwd === '123456') {
+                showPage('page-student-menu');
+                return;
+            } else {
+                alert('学生账号或密码错误');
+                return;
             }
         }
-    </script>
+    }
+
+    // ====================== 学生英语模块切换 ======================
+    function switchEnglishModule(module) {
+        document.querySelectorAll('#page-student-english .module-page').forEach(p => p.classList.remove('active'));
+        document.getElementById('eng-'+module+'-module').classList.add('active');
+    }
+
+    // ====================== 学生英语单词学习 ======================
+    function startEngWord() {
+        currentEngWord = systemData.english.words[0];
+        engWordStep = 0;
+        renderEngWordStep();
+    }
+
+    function renderEngWordStep() {
+        const container = document.getElementById('eng-word-area');
+        if(engWordStep === 0) {
+            container.innerHTML = `
+                <div class="card">
+                    <div class="word-card">
+                        <h2 style="font-size: 36px; margin-bottom: 15px;">${currentEngWord.word}</h2>
+                        <p style="font-size: 18px;">音标：${currentEngWord.phonetic}</p>
+                        <p style="font-size: 18px;">中文释义：${currentEngWord.meaning}</p>
+                        <p>派生词：${currentEngWord.derivative}</p>
+                        <p>近义词：${currentEngWord.synonym}</p>
+                        <p>反义词：${currentEngWord.antonym}</p>
+                        <button class="btn btn-primary" onclick="playEngWordVoice()">🔊 播放读音</button>
+                    </div>
+                    <button class="btn btn-success" onclick="engWordStep=1;renderEngWordStep()">我已了解，进入认词</button>
+                </div>
+            `;
+        } else if(engWordStep === 1) {
+            container.innerHTML = `
+                <div class="card">
+                    <h3>认词检测</h3>
+                    <div class="word-card">
+                        <h2>${currentEngWord.word}</h2>
+                        <p>请回忆释义</p>
+                    </div>
+                    <button class="btn btn-warning" onclick="engWordStep=0;renderEngWordStep()">返回重学</button>
+                    <button class="btn btn-success" onclick="engWordStep=2;renderEngWordStep()">记得，进入读词</button>
+                </div>
+            `;
+        } else if(engWordStep === 2) {
+            container.innerHTML = `
+                <div class="card">
+                    <h3>读词检测</h3>
+                    <div class="word-card">
+                        <h2>${currentEngWord.word}</h2>
+                        <button class="btn btn-primary" onclick="playEngWordVoice()">🔊 听读音</button>
+                    </div>
+                    <button class="btn btn-warning" onclick="engWordStep=1;renderEngWordStep()">返回上一步</button>
+                    <button class="btn btn-success" onclick="engWordStep=3;renderEngWordStep()">读完，进入选择</button>
+                </div>
+            `;
+        } else if(engWordStep === 3) {
+            container.innerHTML = `
+                <div class="card">
+                    <h3>选择正确释义</h3>
+                    <div class="word-card">
+                        <h2>${currentEngWord.word}</h2>
+                        <p><label><input type="radio" name="opt" value="${currentEngWord.meaning}"> ${currentEngWord.meaning}</label></p>
+                        <p><label><input type="radio" name="opt" value="错误选项1"> 错误选项1</label></p>
+                        <p><label><input type="radio" name="opt" value="错误选项2"> 错误选项2</label></p>
+                    </div>
+                    <button class="btn btn-success" onclick="checkEngWord()">提交</button>
+                </div>
+            `;
+        } else if(engWordStep === 4) {
+            container.innerHTML = `
+                <div class="card">
+                    <h3>🎉 单词已掌握！</h3>
+                    <div class="word-card">
+                        <p>单词【${currentEngWord.word}】已加入复习本</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="startEngWord()">学习下一个</button>
+                </div>
+            `;
+        }
+    }
+
+    function playEngWordVoice() {
+        const u = new SpeechSynthesisUtterance(currentEngWord.word);
+        u.lang = 'en-US';
+        speechSynthesis.speak(u);
+    }
+
+    function checkEngWord() {
+        const selected = document.querySelector('input[name="opt"]:checked')?.value;
+        if(selected === currentEngWord.meaning) {
+            engWordStep = 4;
+            renderEngWordStep();
+        } else {
+            alert('错误，请重学');
+            engWordStep = 0;
+            renderEngWordStep();
+        }
+    }
+
+    // ====================== 学生英语阅读 ======================
+    function startEngReading() {
+        const r = systemData.english.readings[0];
+        document.getElementById('eng-reading-area').innerHTML = `
+            <div class="card">
+                <h3>${r.title}</h3>
+                <p style="font-size: 16px; line-height: 1.8;">${r.content}</p>
+                <button class="btn btn-success" onclick="submitEngReading()">完成阅读</button>
+            </div>
+        `;
+    }
+
+    function submitEngReading() {
+        alert('阅读完成！');
+        document.getElementById('eng-reading-area').innerHTML = '';
+    }
+
+    // ====================== 教师英语标签切换 ======================
+    function switchTeacherEngTab(tab) {
+        document.querySelectorAll('#page-teacher-english .nav-item').forEach(i => i.classList.remove('active'));
+        event.target.classList.add('active');
+        document.querySelectorAll('#page-teacher-english .tab-page').forEach(p => p.classList.remove('active'));
+        document.getElementById('t-eng-'+tab+'-tab').classList.add('active');
+    }
+
+    // ====================== 教师数学标签切换 ======================
+    function switchTeacherMathTab(tab) {
+        document.querySelectorAll('#page-teacher-math .nav-item').forEach(i => i.classList.remove('active'));
+        event.target.classList.add('active');
+        document.querySelectorAll('#page-teacher-math .tab-page').forEach(p => p.classList.remove('active'));
+        document.getElementById('t-math-'+tab+'-tab').classList.add('active');
+    }
+</script>
 </body>
 </html>
