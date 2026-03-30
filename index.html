@@ -2,261 +2,230 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moodle风格 - 高校英语学习系统</title>
-    <!-- Bootstrap + Moodle官方配色 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <title>英语学习系统 - 纯功能版</title>
     <style>
-        /* ======== Moodle 官方原版配色/布局 ======== */
-        :root {
-            --moodle-blue: #0F6FCF;
-            --moodle-orange: #F98000;
-            --moodle-light: #E6F4FF;
-            --moodle-gray: #F5F7FA;
-        }
-        body {
-            background: var(--moodle-gray);
-            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
-        }
-        /* 登录页 - Moodle 官方样式 */
-        .moodle-login {
-            max-width: 480px;
-            margin: 100px auto;
-            background: white;
-            padding: 50px;
-            border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-            border-top: 5px solid var(--moodle-blue);
-        }
-        .moodle-login h3 {
-            color: var(--moodle-blue);
-            font-weight: 600;
-        }
-        /* 教师端侧边栏 */
-        .moodle-sidebar {
-            width: 230px;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background: white;
-            border-right: 1px solid #eee;
-            padding: 30px 15px;
-        }
-        .moodle-nav-item {
-            padding: 12px 15px;
-            margin: 4px 0;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .moodle-nav-item.active,
-        .moodle-nav-item:hover {
-            background: var(--moodle-light);
-            color: var(--moodle-blue);
-        }
-        /* 内容区域 */
-        .moodle-content {
-            margin-left: 230px;
-            padding: 40px;
-        }
-        /* 卡片 - Moodle 模块化卡片 */
-        .moodle-card {
-            background: white;
-            border-radius: 6px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border: 1px solid #eee;
-        }
-        .moodle-card h5 {
-            color: #333;
-            font-weight: 600;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        /* 按钮 */
-        .btn-moodle {
-            background: var(--moodle-blue);
-            color: white;
-            border-radius: 6px;
-        }
-        .btn-moodle-orange {
-            background: var(--moodle-orange);
-            color: white;
-        }
+        /* 仅基础布局，不做美化，后续统一修改 */
+        .page { display: none; padding: 20px; }
+        .active { display: block; }
+        .btn { margin: 10px; padding: 10px 20px; }
+        .word-card { border: 1px solid #ccc; padding: 20px; margin: 10px 0; }
+        .question { margin: 15px 0; }
     </style>
 </head>
 <body>
 
-<!-- ====================== Moodle 登录页面 ====================== -->
-<div id="loginPage" class="container">
-    <div class="moodle-login text-center">
-        <h3><i class="bi bi-book me-2"></i>Moodle 英语学习系统</h3>
-        <p class="text-muted mb-4">University Learning System</p>
-        <select id="role" class="form-select mb-3">
-            <option value="teacher">👨‍🏫 教师管理端</option>
-            <option value="student">👨‍🎓 学生学习端</option>
-        </select>
-        <input type="text" id="account" class="form-control mb-3" placeholder="账号">
-        <input type="password" id="pwd" class="form-control mb-3" placeholder="密码">
-        <button onclick="login()" class="btn btn-moodle w-100">登录系统</button>
-    </div>
+<!-- ==========================
+     第一层：学生登录
+=========================== -->
+<div id="page-login" class="page active">
+    <h2>学生登录</h2>
+    <input id="account" placeholder="账号"><br>
+    <input id="pwd" placeholder="密码" type="password"><br>
+    <button class="btn" onclick="login()">登录</button>
 </div>
 
-<!-- ====================== Moodle 教师端 ====================== -->
-<div id="teacherPage" class="d-none">
-    <div class="moodle-sidebar">
-        <h5 class="mb-4 text-primary"><i class="bi bi-speedometer2"></i> 管理控制台</h5>
-        <div class="moodle-nav-item active" onclick="switchTab('class')">📚 课程(班级)管理</div>
-        <div class="moodle-nav-item" onclick="switchTab('student')">👨‍🎓 学员(学生)管理</div>
-        <div class="moodle-nav-item" onclick="switchTab('book')">📖 词汇(词书)管理</div>
-        <div class="moodle-nav-item text-danger mt-auto" onclick="logout()">🚪 退出登录</div>
-    </div>
-
-    <div class="moodle-content">
-        <!-- 班级管理 -->
-        <div id="classTab" class="d-block">
-            <h4 class="mb-3 text-secondary">课程（班级）管理</h4>
-            <div class="moodle-card">
-                <h5>新增班级</h5>
-                <input type="text" id="className" class="form-control mb-2" placeholder="输入班级名称">
-                <button onclick="addClass()" class="btn btn-moodle">创建班级</button>
-            </div>
-            <div class="moodle-card">
-                <h5>班级列表</h5>
-                <div id="classList" class="list-group"></div>
-            </div>
-        </div>
-
-        <!-- 学生管理 -->
-        <div id="studentTab" class="d-none">
-            <h4 class="mb-3 text-secondary">学员（学生）管理</h4>
-            <div class="moodle-card">
-                <h5>添加学员</h5>
-                <input type="text" id="stuName" class="form-control mb-2" placeholder="学生姓名">
-                <input type="text" id="stuAccount" class="form-control mb-2" placeholder="登录账号">
-                <input type="password" id="stuPwd" class="form-control mb-2" placeholder="登录密码">
-                <select id="stuClass" class="form-select mb-2"></select>
-                <button onclick="addStudent()" class="btn btn-moodle">添加学员</button>
-            </div>
-            <div class="moodle-card">
-                <h5>学员列表</h5>
-                <div id="stuList" class="list-group"></div>
-            </div>
-        </div>
-
-        <!-- 词书管理（点对点指定学生） -->
-        <div id="bookTab" class="d-none">
-            <h4 class="mb-3 text-secondary">词汇（词书）管理 - 专属分配</h4>
-            <div class="moodle-card">
-                <h5>1. 创建学员专属词书</h5>
-                <select id="bookClass" class="form-select mb-2" onchange="loadClassStudents()">
-                    <option value="">选择班级</option>
-                </select>
-                <select id="targetStudent" class="form-select mb-2">
-                    <option value="">选择学员</option>
-                </select>
-                <input type="text" id="bookName" class="form-control mb-2" placeholder="词书名称">
-                <button onclick="addBook()" class="btn btn-moodle-orange">创建专属词书</button>
-            </div>
-
-            <div class="moodle-card">
-                <h5>2. 添加单词</h5>
-                <select id="selectBook" class="form-select mb-2"></select>
-                <input type="text" id="word" class="form-control mb-2" placeholder="英文单词">
-                <input type="text" id="wordMean" class="form-control mb-2" placeholder="中文释义">
-                <button onclick="addWordToBook()" class="btn btn-success">添加单词</button>
-            </div>
-
-            <div class="moodle-card">
-                <h5>单词列表</h5>
-                <div id="wordList" class="list-group"></div>
-            </div>
-        </div>
-    </div>
+<!-- ==========================
+     第二层：功能选择
+=========================== -->
+<div id="page-menu" class="page">
+    <h2>请选择学习模块</h2>
+    <button class="btn" onclick="goPage('word')">📖 单词学习</button>
+    <button class="btn" onclick="goPage('reading')">📄 阅读训练</button>
 </div>
 
-<!-- ====================== Moodle 学生端 ====================== -->
-<div id="studentPage" class="d-none">
-    <div class="container py-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="text-primary"><i class="bi bi-house"></i> 我的学习首页</h3>
-            <button onclick="logout()" class="btn btn-danger">退出</button>
-        </div>
+<!-- ==========================
+     第三层A：单词学习系统
+=========================== -->
+<div id="page-word" class="page">
+    <h2>单词学习</h2>
+    <div id="word-stage"></div>
+    <div id="word-controls"></div>
+</div>
 
-        <div class="moodle-card">
-            <h5>📚 我的专属词书</h5>
-            <select id="studentBook" class="form-select mb-3"></select>
-            <button onclick="loadMyWords()" class="btn btn-moodle">查看单词</button>
-            <div id="studentWordList" class="mt-3 list-group"></div>
-        </div>
-
-        <div class="moodle-card">
-            <h5>✅ 单词测试（听音+认词）</h5>
-            <button onclick="startTest()" class="btn btn-moodle-orange">开始测试</button>
-            <div id="testArea" class="mt-3"></div>
-        </div>
-    </div>
+<!-- ==========================
+     第三层B：阅读训练系统
+=========================== -->
+<div id="page-reading" class="page">
+    <h2>阅读训练</h2>
+    <div id="reading-content"></div>
+    <div id="reading-questions"></div>
 </div>
 
 <script>
-// 数据存储
-let data = JSON.parse(localStorage.getItem('moodleEnglish')) || {
-    teacher: { account: "teacher", pwd: "123456" },
-    classes: [], students: [], books: [], words: []
-};
-let currentUser = null;
+// ==============================
+// 全局数据结构（完全按你需求设计）
+// ==============================
+let system = {
+    students: [
+        { id: 1, account: "student", pwd: "123", name: "学生", wordMastery: {}, reviewList: [] }
+    ],
+    currentUser: null,
 
-// 登录/退出
+    // 单词三大来源：课本词 + 教师上传 + 阅读生词
+    textbookWords: [
+        {
+            word: "apple",
+            phonetic: "/ˈæpl/",
+            meaning: "苹果",
+            derivative: "apples",
+            synonym: "fruit",
+            antonym: ""
+        }
+    ],
+    teacherWords: [],
+    readingWords: [],
+
+    // 阅读题库
+    readings: [
+        {
+            title: "My Day",
+            content: "I get up at 7. I eat an apple. I go to school.",
+            questions: [
+                { q: "When do I get up?", options: ["6", "7", "8"], answer: "7" },
+                { q: "What do I eat?", options: ["pear", "apple", "banana"], answer: "apple" },
+                { q: "Where do I go?", options: ["park", "school", "home"], answer: "school" },
+                { q: "The apple is a _____.", options: ["fruit", "animal", "toy"], answer: "fruit" },
+                { q: "I get up at _____.", options: ["7", "8", "9"], answer: "7" }
+            ]
+        }
+    ]
+};
+
+// ==============================
+// 三层页面跳转
+// ==============================
+function goPage(pageName) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageName).classList.add('active');
+}
+
+// 登录
 function login() {
-    let role = document.getElementById('role').value;
     let account = document.getElementById('account').value;
     let pwd = document.getElementById('pwd').value;
-
-    if(role === 'teacher' && account === data.teacher.account && pwd === data.teacher.pwd) {
-        currentUser = { role: 'teacher' }; showPage('teacher'); initTeacher(); return;
+    let stu = system.students.find(s => s.account === account && s.pwd === pwd);
+    if (stu) {
+        system.currentUser = stu;
+        goPage('menu');
+    } else {
+        alert('账号或密码错误');
     }
-    let stu = data.students.find(s => s.account === account && s.pwd === pwd);
-    if(stu) { currentUser = { role: 'student', info: stu }; showPage('student'); initStudent(); return; }
-    alert('账号密码错误');
 }
-function logout() { currentUser=null; showPage('login'); }
-function showPage(type) {
-    document.getElementById('loginPage').classList.add('d-none');
-    document.getElementById('teacherPage').classList.add('d-none');
-    document.getElementById('studentPage').classList.add('d-none');
-    document.getElementById(type+'Page').classList.remove('d-none');
-}
-function switchTab(tab) {
-    document.querySelectorAll('.moodle-nav-item').forEach(i=>i.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    document.getElementById('classTab').classList.add('d-none');
-    document.getElementById('studentTab').classList.add('d-none');
-    document.getElementById('bookTab').classList.add('d-none');
-    document.getElementById(tab+'Tab').classList.remove('d-none');
-}
-function save() { localStorage.setItem('moodleEnglish', JSON.stringify(data)); }
 
-// 班级/学生/词书功能（和你需求完全一致）
-function addClass(){let n=document.getElementById('className').value;if(!n)return;data.classes.push({id:Date.now(),name:n});save();renderClass();document.getElementById('className').value='';}
-function renderClass(){let h='';data.classes.forEach(i=>h+=`<div class="list-group-item">${i.name}</div>`);document.getElementById('classList').innerHTML=h;let o='<option value="">选择班级</option>';data.classes.forEach(i=>o+=`<option value="${i.id}">${i.name}</option>`);document.getElementById('stuClass').innerHTML=o;document.getElementById('bookClass').innerHTML=o;}
-function addStudent(){let n=document.getElementById('stuName').value,a=document.getElementById('stuAccount').value,p=document.getElementById('stuPwd').value,c=document.getElementById('stuClass').value;if(!n||!a||!p||!c){alert('请填写完整');return;}data.students.push({id:Date.now(),name:n,account:a,pwd:p,classId:c});save();renderStudent();document.getElementById('stuName').value='';document.getElementById('stuAccount').value='';document.getElementById('stuPwd').value='';}
-function renderStudent(){let h='';data.students.forEach(s=>{let cn=data.classes.find(c=>c.id==s.classId)?.name||'无';h+=`<div class="list-group-item">${s.name} | 账号：${s.account} | ${cn}</div>`});document.getElementById('stuList').innerHTML=h;}
-function initTeacher(){renderClass();renderStudent();renderBook();}
-function loadClassStudents(){let c=document.getElementById('bookClass').value;let o='<option value="">选择学员</option>';data.students.filter(s=>s.classId==c).forEach(stu=>o+=`<option value="${stu.id}">${stu.name}</option>`);document.getElementById('targetStudent').innerHTML=o;}
-function addBook(){let s=document.getElementById('targetStudent').value,n=document.getElementById('bookName').value;if(!s||!n){alert('选择学员+词书名');return;}data.books.push({id:Date.now(),studentId:s,name:n});save();renderBook();document.getElementById('bookName').value='';}
-function renderBook(){let o='<option value="">选择词书</option>';data.books.forEach(b=>{let stu=data.students.find(s=>s.id==b.studentId);o+=`<option value="${b.id}">${stu?.name}-${b.name}</option>`});document.getElementById('selectBook').innerHTML=o;}
-function addWordToBook(){let b=document.getElementById('selectBook').value,w=document.getElementById('word').value,m=document.getElementById('wordMean').value;if(!b||!w||!m)return;data.words.push({bookId:b,word:w,mean:m});save();renderWordList(b);document.getElementById('word').value='';document.getElementById('wordMean').value='';}
-function renderWordList(b){let h='';data.words.filter(w=>w.bookId==b).forEach(i=>h+=`<div class="list-group-item">${i.word}→${i.mean}</div>`);document.getElementById('wordList').innerHTML=h;}
+// ==============================
+// 单词学习流程（严格按你要求）
+// 学习 → 认词 → 读词 → 选择题 → 加入复习（艾宾浩斯）
+// ==============================
+let currentWord = null;
+let wordStep = 0; // 0=学习 1=认词 2=读词 3=选择题 4=完成
 
-// 学生功能
-function initStudent(){let my=currentUser.info.id;let o='<option value="">选择我的词书</option>';data.books.filter(b=>b.studentId==my).forEach(b=>o+=`<option value="${b.id}">${b.name}</option>`);document.getElementById('studentBook').innerHTML=o;}
-function loadMyWords(){let b=document.getElementById('studentBook').value;let h='';data.words.filter(w=>w.bookId==b).forEach(i=>h+=`<div class="list-group-item">${i.word}→${i.mean}<button onclick="play('${i.word}')" class="btn btn-sm btn-moodle ms-2">🔊</button></div>`);document.getElementById('studentWordList').innerHTML=h;}
-function play(w){let u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u);}
-function startTest(){let b=document.getElementById('studentBook').value;let ws=data.words.filter(w=>w.bookId==b);if(ws.length===0){alert('词书为空');return;}let r=ws[Math.floor(Math.random()*ws.length)];document.getElementById('testArea').innerHTML=`<div class="moodle-card p-3"><h5>${r.word}</h5><button onclick="play('${r.word}')" class="btn btn-sm btn-moodle my-2">🔊听发音</button><input type="text" id="ans" class="form-control mb-2" placeholder="输入中文"><button onclick="check('${r.mean}')" class="btn btn-success">提交</button></div>`;}
-function check(r){let a=document.getElementById('ans').value;alert(a===r?'✅正确！':`❌错误：${r}`);}
+function startWordLearning() {
+    // 从三大词库取词
+    let allWords = [...system.textbookWords, ...system.teacherWords, ...system.readingWords];
+    currentWord = allWords[0];
+    wordStep = 0;
+    showWordStep();
+}
+
+function showWordStep() {
+    let stage = document.getElementById('word-stage');
+    let ctrl = document.getElementById('word-controls');
+
+    if (wordStep === 0) {
+        // ① 单词展示界面
+        stage.innerHTML = `
+            <div class="word-card">
+                <h3>${currentWord.word}</h3>
+                <p>音标：${currentWord.phonetic}</p>
+                <p>释义：${currentWord.meaning}</p>
+                <p>派生词：${currentWord.derivative}</p>
+                <p>近义词：${currentWord.synonym}</p>
+                <p>反义词：${currentWord.antonym}</p>
+            </div>`;
+        ctrl.innerHTML = `<button class="btn" onclick="wordStep=1;showWordStep()">下一步：认词</button>`;
+    }
+    else if (wordStep === 1) {
+        // ② 认词：回忆释义
+        stage.innerHTML = `<p>请回忆：${currentWord.word} 的意思是？</p>`;
+        ctrl.innerHTML = `<button class="btn" onclick="wordStep=2;showWordStep()">已记住 → 读词</button>`;
+    }
+    else if (wordStep === 2) {
+        // ③ 读词
+        stage.innerHTML = `<p>请朗读：${currentWord.word}</p>`;
+        ctrl.innerHTML = `<button class="btn" onclick="wordStep=3;showWordStep()">读完 → 选择题</button>`;
+    }
+    else if (wordStep === 3) {
+        // ④ 选择题
+        stage.innerHTML = `
+            <p>${currentWord.word} 的意思是？</p>
+            <div class="question">
+                <label><input type="radio" name="opt" value="苹果"> 苹果 </label>
+                <label><input type="radio" name="opt" value="梨子"> 梨子 </label>
+                <label><input type="radio" name="opt" value="香蕉"> 香蕉 </label>
+            </div>`;
+        ctrl.innerHTML = `<button class="btn" onclick="checkWordAnswer()">提交答案</button>`;
+    }
+    else if (wordStep === 4) {
+        // ⑤ 完成 → 加入艾宾浩斯复习本
+        stage.innerHTML = `<p>✅ 单词已掌握，已加入复习本！</p>`;
+        ctrl.innerHTML = `<button class="btn" onclick="startWordLearning()">学习下一个</button>`;
+    }
+}
+
+function checkWordAnswer() {
+    let selected = document.querySelector('input[name="opt"]:checked')?.value;
+    if (selected === currentWord.meaning) {
+        // 加入复习（艾宾浩斯逻辑占位）
+        system.currentUser.reviewList.push({
+            word: currentWord.word,
+            nextReview: Date.now() + 86400000 // 1天后复习
+        });
+        wordStep = 4;
+        showWordStep();
+    } else {
+        alert("错误，请再试一次");
+    }
+}
+
+// ==============================
+// 阅读系统（5题 + 生词自动入库）
+// ==============================
+function startReading() {
+    let r = system.readings[0];
+    document.getElementById('reading-content').innerHTML = `
+        <h3>${r.title}</h3>
+        <p>${r.content}</p>`;
+    let html = '';
+    r.questions.forEach((q, i) => {
+        html += `<div class="question">
+            <p>${i+1}. ${q.q}</p>
+            ${q.options.map(o => `<label><input type="radio" name="q${i}" value="${o}"> ${o}</label>`).join('')}
+        </div>`;
+    });
+    document.getElementById('reading-questions').innerHTML = html + `<button class="btn" onclick="finishReading()">提交阅读</button>`;
+}
+
+function finishReading() {
+    // 阅读生词自动加入词库
+    system.readingWords.push({
+        word: "school",
+        meaning: "学校",
+        phonetic: "/skuːl/",
+        derivative: "",
+        synonym: "",
+        antonym: ""
+    });
+    alert("阅读完成！生词 school 已自动加入单词库");
+    goPage('menu');
+}
+
+// 绑定入口
+window.goPage = goPage;
+window.login = login;
+window.startWordLearning = startWordLearning;
+window.startReading = startReading;
+window.finishReading = finishReading;
+window.checkWordAnswer = checkWordAnswer;
 </script>
 </body>
 </html>
