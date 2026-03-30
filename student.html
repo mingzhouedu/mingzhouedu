@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>学生端 - 英语学习</title>
+    <title>学生端 - 数学作业</title>
     <style>
         * {box-sizing: border-box; margin: 0; padding: 0;}
         body {
@@ -11,7 +11,7 @@
             margin: 0;
         }
         .header {
-            background: #0F6FCF;
+            background: #28a745;
             color: white;
             padding: 15px 30px;
             display: flex;
@@ -33,24 +33,52 @@
         }
         .nav-btn:hover {
             background: white;
-            color: #0F6FCF;
+            color: #28a745;
         }
         .container {
             max-width: 1000px;
             margin: 30px auto;
             padding: 0 20px;
         }
-        .card {
+        .homework-card {
             background: white;
             padding: 25px;
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid #28a745;
         }
-        .card h3 {
-            color: #0F6FCF;
-            margin-bottom: 20px;
+        .homework-card h4 {
+            color: #28a745;
+            margin-bottom: 15px;
             font-weight: 600;
+        }
+        .homework-meta {
+            display: flex;
+            gap: 30px;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .question-item {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+        }
+        .question-item p {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .answer-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-height: 80px;
+            font-size: 15px;
+            font-family: inherit;
         }
         .btn {
             padding: 10px 25px;
@@ -61,75 +89,41 @@
             font-size: 15px;
         }
         .btn-primary {
-            background: #0F6FCF;
-            color: white;
-        }
-        .btn-success {
-            background: #42b983;
+            background: #28a745;
             color: white;
         }
         .btn-warning {
-            background: #F98000;
-            color: white;
+            background: #ffc107;
+            color: #333;
         }
-        .word-card {
-            border: 1px solid #e0e0e0;
-            padding: 25px;
-            border-radius: 8px;
-            margin: 15px 0;
+        .status-tag {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
         }
-        .question-block {
-            margin: 15px 0;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
+        .status-unsubmit {
+            background: #fff3cd;
+            color: #856404;
         }
-        .module-page {
-            display: none;
-        }
-        .module-page.active {
-            display: block;
+        .status-submitted {
+            background: #d4edda;
+            color: #155724;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h2>📖 英语学习中心</h2>
+        <h2>📐 数学作业中心</h2>
         <div class="nav-group">
-            <button class="nav-btn" onclick="switchModule('word')">单词学习</button>
-            <button class="nav-btn" onclick="switchModule('reading')">阅读训练</button>
-            <button class="nav-btn" onclick="switchModule('review')">复习本</button>
+            <button class="nav-btn" onclick="loadHomeworkList()">刷新作业</button>
             <button class="nav-btn" onclick="window.location.href='index.html'">返回首页</button>
             <button class="nav-btn" onclick="logout()">退出登录</button>
         </div>
     </div>
 
     <div class="container">
-        <!-- 单词学习模块 -->
-        <div id="word-module" class="module-page active">
-            <div class="card">
-                <h3>单词学习</h3>
-                <button class="btn btn-primary" onclick="startWordLearning()">开始学习新单词</button>
-            </div>
-            <div id="word-learning-area"></div>
-        </div>
-
-        <!-- 阅读训练模块 -->
-        <div id="reading-module" class="module-page">
-            <div class="card">
-                <h3>阅读训练</h3>
-                <button class="btn btn-primary" onclick="startReading()">开始阅读</button>
-            </div>
-            <div id="reading-area"></div>
-        </div>
-
-        <!-- 复习本模块 -->
-        <div id="review-module" class="module-page">
-            <div class="card">
-                <h3>艾宾浩斯复习本</h3>
-                <div id="review-list"></div>
-            </div>
-        </div>
+        <h3 style="margin-bottom: 20px; color: #333;">我的数学作业</h3>
+        <div id="homework-list"></div>
     </div>
 
     <script src="common.js"></script>
@@ -140,227 +134,87 @@
             window.location.href = 'index.html';
         }
 
-        // 模块切换
-        function switchModule(module) {
-            document.querySelectorAll('.module-page').forEach(page => page.classList.remove('active'));
-            document.getElementById(module+'-module').classList.add('active');
-            if(module === 'review') loadReviewList();
-        }
+        // 页面加载时获取作业列表
+        window.onload = loadHomeworkList;
 
-        // ====================== 单词学习核心逻辑 ======================
-        let currentWord = null;
-        let wordStep = 0; // 0=展示 1=认词 2=读词 3=选择题 4=完成
-
-        function startWordLearning() {
+        // 加载作业列表
+        function loadHomeworkList() {
             const data = getSystemData();
-            const allWords = [
-                ...data.english.wordLibrary.textbook,
-                ...data.english.wordLibrary.teacher,
-                ...data.english.wordLibrary.reading
-            ];
-            if(allWords.length === 0) {
-                alert('暂无可学习的单词');
+            const homeworkList = data.math.homeworkList;
+            const container = document.getElementById('homework-list');
+
+            if(homeworkList.length === 0) {
+                container.innerHTML = '<div class="homework-card"><p>暂无布置的数学作业</p></div>';
                 return;
             }
-            currentWord = allWords[0];
-            wordStep = 0;
-            renderWordStep();
-        }
 
-        function renderWordStep() {
-            const container = document.getElementById('word-learning-area');
-            // 步骤0：单词展示
-            if(wordStep === 0) {
-                container.innerHTML = `
-                    <div class="card">
-                        <div class="word-card">
-                            <h2 style="font-size: 36px; margin-bottom: 15px;">${currentWord.word}</h2>
-                            <p style="font-size: 18px; margin: 10px 0;">音标：${currentWord.phonetic}</p>
-                            <p style="font-size: 18px; margin: 10px 0;">中文释义：${currentWord.meaning}</p>
-                            <p style="margin: 10px 0;">派生词：${currentWord.derivative}</p>
-                            <p style="margin: 10px 0;">近义词：${currentWord.synonym}</p>
-                            <p style="margin: 10px 0;">反义词：${currentWord.antonym}</p>
-                            <button class="btn btn-primary" onclick="playWordVoice('${currentWord.word}')">🔊 播放读音</button>
-                        </div>
-                        <button class="btn btn-success" onclick="wordStep=1;renderWordStep()">我已了解，进入认词检测</button>
-                    </div>
-                `;
-            }
-            // 步骤1：认词检测
-            else if(wordStep === 1) {
-                container.innerHTML = `
-                    <div class="card">
-                        <h3>第一步：认词检测</h3>
-                        <div class="word-card">
-                            <h2 style="font-size: 32px;">${currentWord.word}</h2>
-                            <p>请回忆这个单词的中文释义，确认你是否记得</p>
-                        </div>
-                        <button class="btn btn-warning" onclick="wordStep=0;renderWordStep()">忘记了，返回重学</button>
-                        <button class="btn btn-success" onclick="wordStep=2;renderWordStep()">记得，进入读词检测</button>
-                    </div>
-                `;
-            }
-            // 步骤2：读词检测
-            else if(wordStep === 2) {
-                container.innerHTML = `
-                    <div class="card">
-                        <h3>第二步：读词检测</h3>
-                        <div class="word-card">
-                            <h2 style="font-size: 32px;">${currentWord.word}</h2>
-                            <p>请跟着标准读音朗读这个单词，完成后进入下一步</p>
-                            <button class="btn btn-primary" onclick="playWordVoice('${currentWord.word}')">🔊 播放标准读音</button>
-                        </div>
-                        <button class="btn btn-warning" onclick="wordStep=1;renderWordStep()">返回上一步</button>
-                        <button class="btn btn-success" onclick="wordStep=3;renderWordStep()">已完成朗读，进入最终检测</button>
-                    </div>
-                `;
-            }
-            // 步骤3：选择题检测
-            else if(wordStep === 3) {
-                const data = getSystemData();
-                const allMeanings = data.english.wordLibrary.textbook.map(w => w.meaning);
-                const wrongOptions = allMeanings.filter(m => m !== currentWord.meaning).slice(0, 3);
-                const options = [currentWord.meaning, ...wrongOptions].sort(() => Math.random() - 0.5);
-                
-                container.innerHTML = `
-                    <div class="card">
-                        <h3>第三步：最终检测 - 选择正确释义</h3>
-                        <div class="word-card">
-                            <h2 style="font-size: 32px;">${currentWord.word}</h2>
-                            <div id="word-options">
-                                ${options.map((opt, i) => `
-                                    <p style="margin: 12px 0; font-size: 16px;">
-                                        <label><input type="radio" name="word-opt" value="${opt}" style="margin-right: 10px;"> ${String.fromCharCode(65+i)}. ${opt}</label>
-                                    </p>
-                                `).join('')}
-                            </div>
-                        </div>
-                        <button class="btn btn-success" onclick="checkWordAnswer()">提交答案</button>
-                    </div>
-                `;
-            }
-            // 步骤4：完成
-            else if(wordStep === 4) {
-                container.innerHTML = `
-                    <div class="card">
-                        <h3>🎉 恭喜！单词已掌握</h3>
-                        <div class="word-card">
-                            <p>单词【${currentWord.word}】已加入艾宾浩斯复习本，将按时间节点推送复习</p>
-                        </div>
-                        <button class="btn btn-primary" onclick="startWordLearning()">学习下一个单词</button>
-                        <button class="btn btn-success" onclick="switchModule('review')">查看复习本</button>
-                    </div>
-                `;
-            }
-        }
-
-        function checkWordAnswer() {
-            const selected = document.querySelector('input[name="word-opt"]:checked')?.value;
-            if(!selected) {
-                alert('请选择一个选项');
-                return;
-            }
-            if(selected === currentWord.meaning) {
-                // 加入复习本
-                const data = getSystemData();
+            container.innerHTML = homeworkList.map(hw => {
                 const user = getCurrentUser();
-                if(!data.students.find(s => s.id === user.id).reviewList) {
-                    data.students.find(s => s.id === user.id).reviewList = [];
-                }
-                data.students.find(s => s.id === user.id).reviewList.push({
-                    word: currentWord,
-                    currentNode: 0,
-                    nextReviewTime: Date.now() + EBINGHAUS_NODES[0],
-                    isFinished: false
-                });
-                saveSystemData(data);
-                wordStep = 4;
-                renderWordStep();
-            } else {
-                alert('答案错误，请重新学习');
-                wordStep = 0;
-                renderWordStep();
-            }
-        }
+                const submitRecord = hw.submitRecords?.find(r => r.studentId === user.id);
+                const isSubmitted = !!submitRecord;
 
-        // ====================== 阅读训练核心逻辑 ======================
-        let currentReading = null;
-        function startReading() {
-            const data = getSystemData();
-            currentReading = data.english.readingLibrary[0];
-            const container = document.getElementById('reading-area');
-            container.innerHTML = `
-                <div class="card">
-                    <h3 style="margin-bottom: 20px;">${currentReading.title}</h3>
-                    <p style="font-size: 16px; line-height: 1.8; margin-bottom: 30px;">${currentReading.content}</p>
-                    <div id="reading-questions">
-                        ${currentReading.questions.map((q, i) => `
-                            <div class="question-block">
-                                <p style="font-weight: 600; margin-bottom: 10px;">${i+1}. ${q.question}</p>
-                                ${q.options.map((opt, j) => `
-                                    <p style="margin: 8px 0;">
-                                        <label><input type="radio" name="q${i}" value="${opt}" style="margin-right: 10px;"> ${String.fromCharCode(65+j)}. ${opt}</label>
-                                    </p>
-                                `).join('')}
-                            </div>
-                        `).join('')}
+                return `
+                    <div class="homework-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h4>${hw.title}</h4>
+                            <span class="status-tag ${isSubmitted ? 'status-submitted' : 'status-unsubmit'}">
+                                ${isSubmitted ? '已提交' : '待提交'}
+                            </span>
+                        </div>
+                        <div class="homework-meta">
+                            <span>发布时间：${hw.createTime}</span>
+                            <span>截止时间：${hw.deadline}</span>
+                        </div>
+                        <div id="questions-${hw.id}">
+                            ${hw.questions.map((q, i) => `
+                                <div class="question-item">
+                                    <p>${i+1}. ${q.question}</p>
+                                    <textarea class="answer-input" id="answer-${hw.id}-${i}" placeholder="请输入你的答案..." ${isSubmitted ? 'disabled' : ''}>${submitRecord?.answers[i] || ''}</textarea>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${!isSubmitted ? `
+                            <button class="btn btn-primary" onclick="submitHomework(${hw.id})">提交作业</button>
+                            <button class="btn btn-warning" onclick="saveDraft(${hw.id})">保存草稿</button>
+                        ` : `
+                            <p style="color: #155724; margin-top: 10px;">✅ 你已提交该作业，等待老师批改</p>
+                            ${submitRecord.teacherComment ? `<p style="margin-top: 10px;">老师评语：${submitRecord.teacherComment}</p>` : ''}
+                        `}
                     </div>
-                    <button class="btn btn-success" onclick="submitReading()">提交作答</button>
-                </div>
-            `;
+                `;
+            }).join('');
         }
 
-        function submitReading() {
-            let correct = 0;
-            currentReading.questions.forEach((q, i) => {
-                const selected = document.querySelector(`input[name="q${i}"]:checked`)?.value;
-                if(selected === q.answer) correct++;
-            });
-            // 生词自动加入词库
-            const data = getSystemData();
-            currentReading.newWords.forEach(word => {
-                const exist = [
-                    ...data.english.wordLibrary.textbook,
-                    ...data.english.wordLibrary.teacher,
-                    ...data.english.wordLibrary.reading
-                ].some(w => w.word === word);
-                if(!exist) {
-                    data.english.wordLibrary.reading.push({
-                        word, phonetic: "", meaning: "待补充释义", derivative: "", synonym: "", antonym: "", level: 1
-                    });
-                }
-            });
-            saveSystemData(data);
-            alert(`作答完成！正确率：${correct}/${currentReading.questions.length}\n文章生词已自动加入单词库`);
-            document.getElementById('reading-area').innerHTML = '';
-        }
-
-        // ====================== 复习本逻辑 ======================
-        function loadReviewList() {
+        // 提交作业
+        function submitHomework(homeworkId) {
             const data = getSystemData();
             const user = getCurrentUser();
-            const reviewList = data.students.find(s => s.id === user.id)?.reviewList || [];
-            const now = Date.now();
-            const toReview = reviewList.filter(item => item.nextReviewTime <= now && !item.isFinished);
-            
-            const container = document.getElementById('review-list');
-            if(toReview.length === 0) {
-                container.innerHTML = '<p>当前没有待复习的单词</p>';
-                return;
-            }
-            container.innerHTML = toReview.map((item, idx) => `
-                <div class="word-card">
-                    <h3>${item.word.word}</h3>
-                    <p>音标：${item.word.phonetic}</p>
-                    <button class="btn btn-primary" onclick="playWordVoice('${item.word.word}')">🔊 播放读音</button>
-                    <button class="btn btn-success" onclick="showReviewMeaning(this, '${item.word.meaning}')">显示释义</button>
-                    <p class="review-mean" style="display: none; margin-top: 15px;">释义：${item.word.meaning}</p>
-                </div>
-            `).join('');
+            const homework = data.math.homeworkList.find(hw => hw.id === homeworkId);
+            if(!homework) return;
+
+            // 收集答案
+            const answers = homework.questions.map((q, i) => {
+                return document.getElementById(`answer-${homeworkId}-${i}`).value;
+            });
+
+            // 记录提交
+            if(!homework.submitRecords) homework.submitRecords = [];
+            homework.submitRecords.push({
+                studentId: user.id,
+                studentName: user.name,
+                submitTime: new Date().toLocaleString(),
+                answers: answers,
+                teacherComment: ''
+            });
+
+            saveSystemData(data);
+            alert('作业提交成功！');
+            loadHomeworkList();
         }
 
-        function showReviewMeaning(btn, meaning) {
-            btn.nextElementSibling.style.display = 'block';
+        // 保存草稿
+        function saveDraft(homeworkId) {
+            alert('草稿已保存');
         }
     </script>
 </body>
