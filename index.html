@@ -75,28 +75,64 @@
         </div>
     </div>
 
-    <script src="common.js"></script>
     <script>
+        // ====================== 简化版登录逻辑（直接写在index里，不依赖common.js） ======================
+        // 硬编码测试账号，确保能登录
+        const testAccounts = {
+            teacher: { account: "teacher", pwd: "123456" },
+            students: [
+                { account: "student", pwd: "123456" }
+            ]
+        };
+
         function handleLogin() {
             const role = document.getElementById('login-role').value;
-            const account = document.getElementById('login-account').value;
-            const pwd = document.getElementById('login-pwd').value;
+            const account = document.getElementById('login-account').value.trim();
+            const pwd = document.getElementById('login-pwd').value.trim();
 
-            const loginRes = login(role, account, pwd);
-            if(!loginRes.success) {
-                alert(loginRes.message);
+            // 简单校验
+            if(!account || !pwd) {
+                alert('请输入账号和密码');
                 return;
             }
 
-            // 学生登录：选择进入英语/数学模块
-            if(role === 'student') {
-                const choose = confirm('【确定】进入英语学习\n【取消】进入数学作业');
-                window.location.href = choose ? 'student-english.html' : 'student-math.html';
+            // 教师登录
+            if(role === 'teacher') {
+                if(account === testAccounts.teacher.account && pwd === testAccounts.teacher.pwd) {
+                    // 保存登录状态
+                    sessionStorage.setItem('currentUser', JSON.stringify({ role: 'teacher', account }));
+                    // 选择学科
+                    const choose = confirm('【确定】进入英语管理\n【取消】进入数学管理');
+                    if(choose) {
+                        window.location.href = 'teacher-english.html';
+                    } else {
+                        window.location.href = 'teacher-math.html';
+                    }
+                    return;
+                } else {
+                    alert('教师账号或密码错误');
+                    return;
+                }
             }
-            // 教师登录：选择进入英语/数学管理
-            else {
-                const choose = confirm('【确定】进入英语管理\n【取消】进入数学管理');
-                window.location.href = choose ? 'teacher-english.html' : 'teacher-math.html';
+
+            // 学生登录
+            if(role === 'student') {
+                const validStudent = testAccounts.students.find(s => s.account === account && s.pwd === pwd);
+                if(validStudent) {
+                    // 保存登录状态
+                    sessionStorage.setItem('currentUser', JSON.stringify({ role: 'student', account }));
+                    // 选择学科
+                    const choose = confirm('【确定】进入英语学习\n【取消】进入数学作业');
+                    if(choose) {
+                        window.location.href = 'student-english.html';
+                    } else {
+                        window.location.href = 'student-math.html';
+                    }
+                    return;
+                } else {
+                    alert('学生账号或密码错误');
+                    return;
+                }
             }
         }
     </script>
