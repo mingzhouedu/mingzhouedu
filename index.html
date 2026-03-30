@@ -2,230 +2,103 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>英语学习系统 - 纯功能版</title>
+    <title>明舟教育 - 统一登录</title>
     <style>
-        /* 仅基础布局，不做美化，后续统一修改 */
-        .page { display: none; padding: 20px; }
-        .active { display: block; }
-        .btn { margin: 10px; padding: 10px 20px; }
-        .word-card { border: 1px solid #ccc; padding: 20px; margin: 10px 0; }
-        .question { margin: 15px 0; }
+        * {box-sizing: border-box; margin: 0; padding: 0;}
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-box {
+            background: white;
+            width: 420px;
+            padding: 45px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h2 {
+            text-align: center;
+            color: #165DFF;
+            margin-bottom: 35px;
+            font-weight: 600;
+        }
+        select, input {
+            width: 100%;
+            padding: 13px 15px;
+            margin: 10px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 13px;
+            margin-top: 15px;
+            background: #165DFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .login-btn:hover {
+            background: #0d47a1;
+        }
+        .test-tip {
+            margin-top: 25px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.8;
+        }
     </style>
 </head>
 <body>
+    <div class="login-box">
+        <h2>明舟教育学习系统</h2>
+        <select id="login-role">
+            <option value="student">👨‍🎓 学生端</option>
+            <option value="teacher">👨‍🏫 教师端</option>
+        </select>
+        <input type="text" id="login-account" placeholder="请输入账号">
+        <input type="password" id="login-pwd" placeholder="请输入密码">
+        <button class="login-btn" onclick="handleLogin()">登录系统</button>
+        <div class="test-tip">
+            测试账号：<br>
+            学生：student / 123456<br>
+            教师：teacher / 123456
+        </div>
+    </div>
 
-<!-- ==========================
-     第一层：学生登录
-=========================== -->
-<div id="page-login" class="page active">
-    <h2>学生登录</h2>
-    <input id="account" placeholder="账号"><br>
-    <input id="pwd" placeholder="密码" type="password"><br>
-    <button class="btn" onclick="login()">登录</button>
-</div>
+    <script src="common.js"></script>
+    <script>
+        function handleLogin() {
+            const role = document.getElementById('login-role').value;
+            const account = document.getElementById('login-account').value;
+            const pwd = document.getElementById('login-pwd').value;
 
-<!-- ==========================
-     第二层：功能选择
-=========================== -->
-<div id="page-menu" class="page">
-    <h2>请选择学习模块</h2>
-    <button class="btn" onclick="goPage('word')">📖 单词学习</button>
-    <button class="btn" onclick="goPage('reading')">📄 阅读训练</button>
-</div>
+            const loginRes = login(role, account, pwd);
+            if(!loginRes.success) {
+                alert(loginRes.message);
+                return;
+            }
 
-<!-- ==========================
-     第三层A：单词学习系统
-=========================== -->
-<div id="page-word" class="page">
-    <h2>单词学习</h2>
-    <div id="word-stage"></div>
-    <div id="word-controls"></div>
-</div>
-
-<!-- ==========================
-     第三层B：阅读训练系统
-=========================== -->
-<div id="page-reading" class="page">
-    <h2>阅读训练</h2>
-    <div id="reading-content"></div>
-    <div id="reading-questions"></div>
-</div>
-
-<script>
-// ==============================
-// 全局数据结构（完全按你需求设计）
-// ==============================
-let system = {
-    students: [
-        { id: 1, account: "student", pwd: "123", name: "学生", wordMastery: {}, reviewList: [] }
-    ],
-    currentUser: null,
-
-    // 单词三大来源：课本词 + 教师上传 + 阅读生词
-    textbookWords: [
-        {
-            word: "apple",
-            phonetic: "/ˈæpl/",
-            meaning: "苹果",
-            derivative: "apples",
-            synonym: "fruit",
-            antonym: ""
+            // 学生登录：选择进入英语/数学模块
+            if(role === 'student') {
+                const choose = confirm('【确定】进入英语学习\n【取消】进入数学作业');
+                window.location.href = choose ? 'student-english.html' : 'student-math.html';
+            }
+            // 教师登录：选择进入英语/数学管理
+            else {
+                const choose = confirm('【确定】进入英语管理\n【取消】进入数学管理');
+                window.location.href = choose ? 'teacher-english.html' : 'teacher-math.html';
+            }
         }
-    ],
-    teacherWords: [],
-    readingWords: [],
-
-    // 阅读题库
-    readings: [
-        {
-            title: "My Day",
-            content: "I get up at 7. I eat an apple. I go to school.",
-            questions: [
-                { q: "When do I get up?", options: ["6", "7", "8"], answer: "7" },
-                { q: "What do I eat?", options: ["pear", "apple", "banana"], answer: "apple" },
-                { q: "Where do I go?", options: ["park", "school", "home"], answer: "school" },
-                { q: "The apple is a _____.", options: ["fruit", "animal", "toy"], answer: "fruit" },
-                { q: "I get up at _____.", options: ["7", "8", "9"], answer: "7" }
-            ]
-        }
-    ]
-};
-
-// ==============================
-// 三层页面跳转
-// ==============================
-function goPage(pageName) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + pageName).classList.add('active');
-}
-
-// 登录
-function login() {
-    let account = document.getElementById('account').value;
-    let pwd = document.getElementById('pwd').value;
-    let stu = system.students.find(s => s.account === account && s.pwd === pwd);
-    if (stu) {
-        system.currentUser = stu;
-        goPage('menu');
-    } else {
-        alert('账号或密码错误');
-    }
-}
-
-// ==============================
-// 单词学习流程（严格按你要求）
-// 学习 → 认词 → 读词 → 选择题 → 加入复习（艾宾浩斯）
-// ==============================
-let currentWord = null;
-let wordStep = 0; // 0=学习 1=认词 2=读词 3=选择题 4=完成
-
-function startWordLearning() {
-    // 从三大词库取词
-    let allWords = [...system.textbookWords, ...system.teacherWords, ...system.readingWords];
-    currentWord = allWords[0];
-    wordStep = 0;
-    showWordStep();
-}
-
-function showWordStep() {
-    let stage = document.getElementById('word-stage');
-    let ctrl = document.getElementById('word-controls');
-
-    if (wordStep === 0) {
-        // ① 单词展示界面
-        stage.innerHTML = `
-            <div class="word-card">
-                <h3>${currentWord.word}</h3>
-                <p>音标：${currentWord.phonetic}</p>
-                <p>释义：${currentWord.meaning}</p>
-                <p>派生词：${currentWord.derivative}</p>
-                <p>近义词：${currentWord.synonym}</p>
-                <p>反义词：${currentWord.antonym}</p>
-            </div>`;
-        ctrl.innerHTML = `<button class="btn" onclick="wordStep=1;showWordStep()">下一步：认词</button>`;
-    }
-    else if (wordStep === 1) {
-        // ② 认词：回忆释义
-        stage.innerHTML = `<p>请回忆：${currentWord.word} 的意思是？</p>`;
-        ctrl.innerHTML = `<button class="btn" onclick="wordStep=2;showWordStep()">已记住 → 读词</button>`;
-    }
-    else if (wordStep === 2) {
-        // ③ 读词
-        stage.innerHTML = `<p>请朗读：${currentWord.word}</p>`;
-        ctrl.innerHTML = `<button class="btn" onclick="wordStep=3;showWordStep()">读完 → 选择题</button>`;
-    }
-    else if (wordStep === 3) {
-        // ④ 选择题
-        stage.innerHTML = `
-            <p>${currentWord.word} 的意思是？</p>
-            <div class="question">
-                <label><input type="radio" name="opt" value="苹果"> 苹果 </label>
-                <label><input type="radio" name="opt" value="梨子"> 梨子 </label>
-                <label><input type="radio" name="opt" value="香蕉"> 香蕉 </label>
-            </div>`;
-        ctrl.innerHTML = `<button class="btn" onclick="checkWordAnswer()">提交答案</button>`;
-    }
-    else if (wordStep === 4) {
-        // ⑤ 完成 → 加入艾宾浩斯复习本
-        stage.innerHTML = `<p>✅ 单词已掌握，已加入复习本！</p>`;
-        ctrl.innerHTML = `<button class="btn" onclick="startWordLearning()">学习下一个</button>`;
-    }
-}
-
-function checkWordAnswer() {
-    let selected = document.querySelector('input[name="opt"]:checked')?.value;
-    if (selected === currentWord.meaning) {
-        // 加入复习（艾宾浩斯逻辑占位）
-        system.currentUser.reviewList.push({
-            word: currentWord.word,
-            nextReview: Date.now() + 86400000 // 1天后复习
-        });
-        wordStep = 4;
-        showWordStep();
-    } else {
-        alert("错误，请再试一次");
-    }
-}
-
-// ==============================
-// 阅读系统（5题 + 生词自动入库）
-// ==============================
-function startReading() {
-    let r = system.readings[0];
-    document.getElementById('reading-content').innerHTML = `
-        <h3>${r.title}</h3>
-        <p>${r.content}</p>`;
-    let html = '';
-    r.questions.forEach((q, i) => {
-        html += `<div class="question">
-            <p>${i+1}. ${q.q}</p>
-            ${q.options.map(o => `<label><input type="radio" name="q${i}" value="${o}"> ${o}</label>`).join('')}
-        </div>`;
-    });
-    document.getElementById('reading-questions').innerHTML = html + `<button class="btn" onclick="finishReading()">提交阅读</button>`;
-}
-
-function finishReading() {
-    // 阅读生词自动加入词库
-    system.readingWords.push({
-        word: "school",
-        meaning: "学校",
-        phonetic: "/skuːl/",
-        derivative: "",
-        synonym: "",
-        antonym: ""
-    });
-    alert("阅读完成！生词 school 已自动加入单词库");
-    goPage('menu');
-}
-
-// 绑定入口
-window.goPage = goPage;
-window.login = login;
-window.startWordLearning = startWordLearning;
-window.startReading = startReading;
-window.finishReading = finishReading;
-window.checkWordAnswer = checkWordAnswer;
-</script>
+    </script>
 </body>
 </html>
