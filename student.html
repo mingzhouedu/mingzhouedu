@@ -2,50 +2,366 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>英语学习 - 明舟教育</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生端 - 英语学习</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif;}
-        body{background:#fff8e1;padding:20px;max-width:900px;margin:0 auto;}
-        .header{background:#ff9800;color:white;padding:20px;text-align:center;border-radius:12px;margin-bottom:20px;}
-        .back{padding:10px 20px;background:#e65100;color:white;border:none;border-radius:30px;cursor:pointer;margin-bottom:15px;}
-        .tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
-        .tab{padding:14px;text-align:center;background:white;border:2px solid #ffcc80;border-radius:8px;cursor:pointer;}
-        .tab.active{background:#ff9800;color:white;}
-        .panel{background:white;padding:25px;border-radius:12px;display:none;}
-        .panel.active{display:block;}
-        .word-card{padding:15px;background:#fff4e2;border-radius:8px;margin:10px 0;font-size:18px;}
-        .read-box{line-height:1.8;padding:20px;background:#fdf6e3;border-radius:10px;}
-        .voice-btn{padding:8px 16px;background:#0288d1;color:white;border:none;border-radius:20px;cursor:pointer;margin-left:10px;}
+        * {box-sizing: border-box; margin: 0; padding: 0;}
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+        }
+        .header {
+            background: #0F6FCF;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-group {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .nav-btn:hover {
+            background: white;
+            color: #0F6FCF;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .card h3 {
+            color: #0F6FCF;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 15px;
+        }
+        .btn-primary {
+            background: #0F6FCF;
+            color: white;
+        }
+        .btn-success {
+            background: #42b983;
+            color: white;
+        }
+        .btn-warning {
+            background: #F98000;
+            color: white;
+        }
+        .word-card {
+            border: 1px solid #e0e0e0;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .question-block {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+        }
+        .module-page {
+            display: none;
+        }
+        .module-page.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
-<button class="back" onclick="location.href='index.html'">← 返回主页</button>
-<div class="header">
-    <h1>📚 英语学习中心</h1>
-</div>
-<div class="tab-bar">
-    <div class="tab active" onclick="switchTab(0)">单词记忆</div>
-    <div class="tab" onclick="switchTab(1)">英语阅读</div>
-    <div class="tab" onclick="switchTab(2)">发音训练</div>
-</div>
-<div class="panel active" id="p0">
-    <div class="word-card">apple - 苹果 <button class="voice-btn" onclick="speak('apple')">发音</button></div>
-    <div class="word-card">banana - 香蕉 <button class="voice-btn" onclick="speak('banana')">发音</button></div>
-    <div class="word-card">orange - 橙子 <button class="voice-btn" onclick="speak('orange')">发音</button></div>
-</div>
-<div class="panel" id="p1">
-    <div class="read-box">
-        I am a student. I like apples and bananas. They are good for me.
-        I learn English every day. Reading is fun!
+    <div class="header">
+        <h2>📖 英语学习中心</h2>
+        <div class="nav-group">
+            <button class="nav-btn" onclick="switchModule('word')">单词学习</button>
+            <button class="nav-btn" onclick="switchModule('reading')">阅读训练</button>
+            <button class="nav-btn" onclick="switchModule('review')">复习本</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'">返回首页</button>
+            <button class="nav-btn" onclick="logout()">退出登录</button>
+        </div>
     </div>
-</div>
-<div class="panel" id="p2">
-    <p>点击单词按钮即可听标准发音，支持跟读训练</p>
-</div>
-<script>
-function switchTab(i){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('p'+i).classList.add('active');document.querySelectorAll('.tab')[i].classList.add('active');}
-function speak(word){let u = new SpeechSynthesisUtterance(word);u.lang='en-US';speechSynthesis.speak(u);}
-</script>
+
+    <div class="container">
+        <!-- 单词学习模块 -->
+        <div id="word-module" class="module-page active">
+            <div class="card">
+                <h3>单词学习</h3>
+                <button class="btn btn-primary" onclick="startWordLearning()">开始学习新单词</button>
+            </div>
+            <div id="word-learning-area"></div>
+        </div>
+
+        <!-- 阅读训练模块 -->
+        <div id="reading-module" class="module-page">
+            <div class="card">
+                <h3>阅读训练</h3>
+                <button class="btn btn-primary" onclick="startReading()">开始阅读</button>
+            </div>
+            <div id="reading-area"></div>
+        </div>
+
+        <!-- 复习本模块 -->
+        <div id="review-module" class="module-page">
+            <div class="card">
+                <h3>艾宾浩斯复习本</h3>
+                <div id="review-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script>
+        // 登录校验
+        if(!checkLogin('student')) {
+            alert('请先登录');
+            window.location.href = 'index.html';
+        }
+
+        // 模块切换
+        function switchModule(module) {
+            document.querySelectorAll('.module-page').forEach(page => page.classList.remove('active'));
+            document.getElementById(module+'-module').classList.add('active');
+            if(module === 'review') loadReviewList();
+        }
+
+        // ====================== 单词学习核心逻辑 ======================
+        let currentWord = null;
+        let wordStep = 0; // 0=展示 1=认词 2=读词 3=选择题 4=完成
+
+        function startWordLearning() {
+            const data = getSystemData();
+            const allWords = [
+                ...data.english.wordLibrary.textbook,
+                ...data.english.wordLibrary.teacher,
+                ...data.english.wordLibrary.reading
+            ];
+            if(allWords.length === 0) {
+                alert('暂无可学习的单词');
+                return;
+            }
+            currentWord = allWords[0];
+            wordStep = 0;
+            renderWordStep();
+        }
+
+        function renderWordStep() {
+            const container = document.getElementById('word-learning-area');
+            // 步骤0：单词展示
+            if(wordStep === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <div class="word-card">
+                            <h2 style="font-size: 36px; margin-bottom: 15px;">${currentWord.word}</h2>
+                            <p style="font-size: 18px; margin: 10px 0;">音标：${currentWord.phonetic}</p>
+                            <p style="font-size: 18px; margin: 10px 0;">中文释义：${currentWord.meaning}</p>
+                            <p style="margin: 10px 0;">派生词：${currentWord.derivative}</p>
+                            <p style="margin: 10px 0;">近义词：${currentWord.synonym}</p>
+                            <p style="margin: 10px 0;">反义词：${currentWord.antonym}</p>
+                            <button class="btn btn-primary" onclick="playWordVoice('${currentWord.word}')">🔊 播放读音</button>
+                        </div>
+                        <button class="btn btn-success" onclick="wordStep=1;renderWordStep()">我已了解，进入认词检测</button>
+                    </div>
+                `;
+            }
+            // 步骤1：认词检测
+            else if(wordStep === 1) {
+                container.innerHTML = `
+                    <div class="card">
+                        <h3>第一步：认词检测</h3>
+                        <div class="word-card">
+                            <h2 style="font-size: 32px;">${currentWord.word}</h2>
+                            <p>请回忆这个单词的中文释义，确认你是否记得</p>
+                        </div>
+                        <button class="btn btn-warning" onclick="wordStep=0;renderWordStep()">忘记了，返回重学</button>
+                        <button class="btn btn-success" onclick="wordStep=2;renderWordStep()">记得，进入读词检测</button>
+                    </div>
+                `;
+            }
+            // 步骤2：读词检测
+            else if(wordStep === 2) {
+                container.innerHTML = `
+                    <div class="card">
+                        <h3>第二步：读词检测</h3>
+                        <div class="word-card">
+                            <h2 style="font-size: 32px;">${currentWord.word}</h2>
+                            <p>请跟着标准读音朗读这个单词，完成后进入下一步</p>
+                            <button class="btn btn-primary" onclick="playWordVoice('${currentWord.word}')">🔊 播放标准读音</button>
+                        </div>
+                        <button class="btn btn-warning" onclick="wordStep=1;renderWordStep()">返回上一步</button>
+                        <button class="btn btn-success" onclick="wordStep=3;renderWordStep()">已完成朗读，进入最终检测</button>
+                    </div>
+                `;
+            }
+            // 步骤3：选择题检测
+            else if(wordStep === 3) {
+                const data = getSystemData();
+                const allMeanings = data.english.wordLibrary.textbook.map(w => w.meaning);
+                const wrongOptions = allMeanings.filter(m => m !== currentWord.meaning).slice(0, 3);
+                const options = [currentWord.meaning, ...wrongOptions].sort(() => Math.random() - 0.5);
+                
+                container.innerHTML = `
+                    <div class="card">
+                        <h3>第三步：最终检测 - 选择正确释义</h3>
+                        <div class="word-card">
+                            <h2 style="font-size: 32px;">${currentWord.word}</h2>
+                            <div id="word-options">
+                                ${options.map((opt, i) => `
+                                    <p style="margin: 12px 0; font-size: 16px;">
+                                        <label><input type="radio" name="word-opt" value="${opt}" style="margin-right: 10px;"> ${String.fromCharCode(65+i)}. ${opt}</label>
+                                    </p>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <button class="btn btn-success" onclick="checkWordAnswer()">提交答案</button>
+                    </div>
+                `;
+            }
+            // 步骤4：完成
+            else if(wordStep === 4) {
+                container.innerHTML = `
+                    <div class="card">
+                        <h3>🎉 恭喜！单词已掌握</h3>
+                        <div class="word-card">
+                            <p>单词【${currentWord.word}】已加入艾宾浩斯复习本，将按时间节点推送复习</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="startWordLearning()">学习下一个单词</button>
+                        <button class="btn btn-success" onclick="switchModule('review')">查看复习本</button>
+                    </div>
+                `;
+            }
+        }
+
+        function checkWordAnswer() {
+            const selected = document.querySelector('input[name="word-opt"]:checked')?.value;
+            if(!selected) {
+                alert('请选择一个选项');
+                return;
+            }
+            if(selected === currentWord.meaning) {
+                // 加入复习本
+                const data = getSystemData();
+                const user = getCurrentUser();
+                if(!data.students.find(s => s.id === user.id).reviewList) {
+                    data.students.find(s => s.id === user.id).reviewList = [];
+                }
+                data.students.find(s => s.id === user.id).reviewList.push({
+                    word: currentWord,
+                    currentNode: 0,
+                    nextReviewTime: Date.now() + EBINGHAUS_NODES[0],
+                    isFinished: false
+                });
+                saveSystemData(data);
+                wordStep = 4;
+                renderWordStep();
+            } else {
+                alert('答案错误，请重新学习');
+                wordStep = 0;
+                renderWordStep();
+            }
+        }
+
+        // ====================== 阅读训练核心逻辑 ======================
+        let currentReading = null;
+        function startReading() {
+            const data = getSystemData();
+            currentReading = data.english.readingLibrary[0];
+            const container = document.getElementById('reading-area');
+            container.innerHTML = `
+                <div class="card">
+                    <h3 style="margin-bottom: 20px;">${currentReading.title}</h3>
+                    <p style="font-size: 16px; line-height: 1.8; margin-bottom: 30px;">${currentReading.content}</p>
+                    <div id="reading-questions">
+                        ${currentReading.questions.map((q, i) => `
+                            <div class="question-block">
+                                <p style="font-weight: 600; margin-bottom: 10px;">${i+1}. ${q.question}</p>
+                                ${q.options.map((opt, j) => `
+                                    <p style="margin: 8px 0;">
+                                        <label><input type="radio" name="q${i}" value="${opt}" style="margin-right: 10px;"> ${String.fromCharCode(65+j)}. ${opt}</label>
+                                    </p>
+                                `).join('')}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="btn btn-success" onclick="submitReading()">提交作答</button>
+                </div>
+            `;
+        }
+
+        function submitReading() {
+            let correct = 0;
+            currentReading.questions.forEach((q, i) => {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`)?.value;
+                if(selected === q.answer) correct++;
+            });
+            // 生词自动加入词库
+            const data = getSystemData();
+            currentReading.newWords.forEach(word => {
+                const exist = [
+                    ...data.english.wordLibrary.textbook,
+                    ...data.english.wordLibrary.teacher,
+                    ...data.english.wordLibrary.reading
+                ].some(w => w.word === word);
+                if(!exist) {
+                    data.english.wordLibrary.reading.push({
+                        word, phonetic: "", meaning: "待补充释义", derivative: "", synonym: "", antonym: "", level: 1
+                    });
+                }
+            });
+            saveSystemData(data);
+            alert(`作答完成！正确率：${correct}/${currentReading.questions.length}\n文章生词已自动加入单词库`);
+            document.getElementById('reading-area').innerHTML = '';
+        }
+
+        // ====================== 复习本逻辑 ======================
+        function loadReviewList() {
+            const data = getSystemData();
+            const user = getCurrentUser();
+            const reviewList = data.students.find(s => s.id === user.id)?.reviewList || [];
+            const now = Date.now();
+            const toReview = reviewList.filter(item => item.nextReviewTime <= now && !item.isFinished);
+            
+            const container = document.getElementById('review-list');
+            if(toReview.length === 0) {
+                container.innerHTML = '<p>当前没有待复习的单词</p>';
+                return;
+            }
+            container.innerHTML = toReview.map((item, idx) => `
+                <div class="word-card">
+                    <h3>${item.word.word}</h3>
+                    <p>音标：${item.word.phonetic}</p>
+                    <button class="btn btn-primary" onclick="playWordVoice('${item.word.word}')">🔊 播放读音</button>
+                    <button class="btn btn-success" onclick="showReviewMeaning(this, '${item.word.meaning}')">显示释义</button>
+                    <p class="review-mean" style="display: none; margin-top: 15px;">释义：${item.word.meaning}</p>
+                </div>
+            `).join('');
+        }
+
+        function showReviewMeaning(btn, meaning) {
+            btn.nextElementSibling.style.display = 'block';
+        }
+    </script>
 </body>
 </html>
