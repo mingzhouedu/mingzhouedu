@@ -2,123 +2,287 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>教师端 - 明舟教育背单词系统</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师端 - 英语管理</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+        /* Moodle 官方风格 */
+        :root {
+            --moodle-blue: #0F6FCF;
+            --moodle-orange: #F98000;
+            --moodle-light: #E6F4FF;
+            --moodle-gray: #F5F7FA;
         }
+        * {box-sizing: border-box; margin: 0; padding: 0;}
         body {
-            background: #f5f7fa;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            background: var(--moodle-gray);
+            margin: 0;
         }
-        .header {
-            text-align: center;
-            padding: 20px;
-            background: #2b85ff;
-            color: white;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-        .back-home {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 6px 12px;
+        .sidebar {
+            width: 230px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
             background: white;
-            color: #2b85ff;
+            border-right: 1px solid #eee;
+            padding: 30px 15px;
+        }
+        .sidebar h4 {
+            color: var(--moodle-blue);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .nav-item {
+            padding: 12px 15px;
+            margin: 4px 0;
             border-radius: 6px;
-            text-decoration: none;
-            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .box {
+        .nav-item.active, .nav-item:hover {
+            background: var(--moodle-light);
+            color: var(--moodle-blue);
+        }
+        .content {
+            margin-left: 230px;
+            padding: 40px;
+        }
+        .card {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
+            border-radius: 6px;
+            padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
         }
-        .box-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
+        .card h5 {
             color: #333;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
         .btn {
-            padding: 12px 20px;
+            padding: 10px 25px;
             border: none;
-            border-radius: 8px;
-            background: #2b85ff;
-            color: white;
+            border-radius: 6px;
             cursor: pointer;
             margin: 5px;
         }
-        .btn-green {
-            background: #07c160;
+        .btn-moodle {
+            background: var(--moodle-blue);
+            color: white;
+        }
+        .btn-orange {
+            background: var(--moodle-orange);
+            color: white;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        .list-group-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .tab-page {
+            display: none;
+        }
+        .tab-page.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>👨‍🏫 教师管理端</h1>
-        <a href="index.html" class="back-home">← 返回首页</a>
+    <div class="sidebar">
+        <h4><i class="bi bi-book"></i> 英语管理后台</h4>
+        <div class="nav-item active" onclick="switchTab('student')">👨‍🎓 学生管理</div>
+        <div class="nav-item" onclick="switchTab('word')">📖 词库管理</div>
+        <div class="nav-item" onclick="switchTab('reading')">📄 阅读管理</div>
+        <div class="nav-item" onclick="window.location.href='teacher-math.html'">📐 切换到数学管理</div>
+        <div class="nav-item text-danger" onclick="logout()" style="margin-top: 50px;">🚪 退出登录</div>
     </div>
 
-    <div class="box">
-        <div class="box-title">1. 创建学生账号</div>
-        <input type="text" id="stuAccount" placeholder="输入学生账号">
-        <input type="password" id="stuPwd" placeholder="输入学生密码">
-        <button class="btn" onclick="createStudent()">创建账号</button>
+    <div class="content">
+        <!-- 学生管理 -->
+        <div id="student-tab" class="tab-page active">
+            <h3 class="mb-3 text-secondary">学生管理</h3>
+            <div class="card">
+                <h5>添加学生账号</h5>
+                <input type="text" id="stu-name" placeholder="学生姓名">
+                <input type="text" id="stu-account" placeholder="登录账号">
+                <input type="password" id="stu-pwd" placeholder="登录密码">
+                <button class="btn btn-moodle" onclick="addStudent()">添加学生</button>
+            </div>
+            <div class="card">
+                <h5>学生列表</h5>
+                <div id="student-list"></div>
+            </div>
+        </div>
+
+        <!-- 词库管理 -->
+        <div id="word-tab" class="tab-page">
+            <h3 class="mb-3 text-secondary">词库管理</h3>
+            <div class="card">
+                <h5>添加单词到词库</h5>
+                <input type="text" id="word-text" placeholder="英文单词/词组">
+                <input type="text" id="word-phonetic" placeholder="音标">
+                <input type="text" id="word-meaning" placeholder="中文释义">
+                <input type="text" id="word-derivative" placeholder="派生词">
+                <input type="text" id="word-synonym" placeholder="近义词">
+                <input type="text" id="word-antonym" placeholder="反义词">
+                <button class="btn btn-orange" onclick="addWord()">添加单词</button>
+            </div>
+            <div class="card">
+                <h5>词库列表</h5>
+                <div id="word-list"></div>
+            </div>
+        </div>
+
+        <!-- 阅读管理 -->
+        <div id="reading-tab" class="tab-page">
+            <h3 class="mb-3 text-secondary">阅读管理</h3>
+            <div class="card">
+                <h5>添加阅读素材</h5>
+                <input type="text" id="reading-title" placeholder="文章标题">
+                <textarea id="reading-content" placeholder="文章正文" rows="4"></textarea>
+                <button class="btn btn-moodle" onclick="addReading()">添加阅读</button>
+            </div>
+            <div class="card">
+                <h5>阅读素材列表</h5>
+                <div id="reading-list"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="box">
-        <div class="box-title">2. 分配单词（英文|中文）</div>
-        <textarea id="wordContent" rows="5" placeholder="例如：apple|苹果\nbanana|香蕉"></textarea>
-        <input type="text" id="toStudent" placeholder="分配给学生账号">
-        <button class="btn btn-green" onclick="sendWordToStudent()">分配单词</button>
-    </div>
+    <script src="common.js"></script>
+    <script>
+        // 登录校验
+        if(!checkLogin('teacher')) {
+            alert('请先登录');
+            window.location.href = 'index.html';
+        }
 
-<script>
-    // 学生账号存储
-    function createStudent() {
-        let account = document.getElementById('stuAccount').value;
-        let pwd = document.getElementById('stuPwd').value;
-        if(!account || !pwd) { alert('请填写完整'); return; }
-        
-        let list = JSON.parse(localStorage.getItem('studentAccountList') || '[]');
-        list.push({account,pwd});
-        localStorage.setItem('studentAccountList', JSON.stringify(list));
-        alert('创建成功！');
-    }
+        // 标签切换
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+            document.getElementById(tab+'-tab').classList.add('active');
+            
+            if(tab === 'student') renderStudentList();
+            if(tab === 'word') renderWordList();
+            if(tab === 'reading') renderReadingList();
+        }
 
-    // 分配单词
-    function sendWordToStudent() {
-        let content = document.getElementById('wordContent').value;
-        let student = document.getElementById('toStudent').value;
-        if(!content || !student) { alert('请填写完整'); return; }
-        
-        let words = content.split('\n').map(item=>{
-            let [w,m] = item.split('|');
-            return {w,m,sentence:`This is ${w}.`};
-        }).filter(i=>i.w&&i.m);
+        // ====================== 学生管理 ======================
+        function addStudent() {
+            const name = document.getElementById('stu-name').value;
+            const account = document.getElementById('stu-account').value;
+            const pwd = document.getElementById('stu-pwd').value;
+            if(!name || !account || !pwd) {
+                alert('请填写完整信息');
+                return;
+            }
+            const data = getSystemData();
+            data.students.push({
+                id: Date.now(),
+                name,
+                account,
+                pwd
+            });
+            saveSystemData(data);
+            renderStudentList();
+            // 清空输入框
+            document.getElementById('stu-name').value = '';
+            document.getElementById('stu-account').value = '';
+            document.getElementById('stu-pwd').value = '';
+        }
 
-        let data = JSON.parse(localStorage.getItem('studentWordData') || '{}');
-        data[student] = words;
-        localStorage.setItem('studentWordData', JSON.stringify(data));
-        alert('单词分配成功！');
-    }
-</script>
+        function renderStudentList() {
+            const data = getSystemData();
+            document.getElementById('student-list').innerHTML = data.students.map(stu => `
+                <div class="list-group-item">
+                    ${stu.name} | 账号：${stu.account}
+                </div>
+            `).join('');
+        }
+
+        // ====================== 词库管理 ======================
+        function addWord() {
+            const word = {
+                word: document.getElementById('word-text').value,
+                phonetic: document.getElementById('word-phonetic').value,
+                meaning: document.getElementById('word-meaning').value,
+                derivative: document.getElementById('word-derivative').value,
+                synonym: document.getElementById('word-synonym').value,
+                antonym: document.getElementById('word-antonym').value,
+                level: 1
+            };
+            if(!word.word || !word.meaning) {
+                alert('请填写单词和释义');
+                return;
+            }
+            const data = getSystemData();
+            data.english.wordLibrary.teacher.push(word);
+            saveSystemData(data);
+            renderWordList();
+            // 清空输入框
+            document.getElementById('word-text').value = '';
+            document.getElementById('word-phonetic').value = '';
+            document.getElementById('word-meaning').value = '';
+            document.getElementById('word-derivative').value = '';
+            document.getElementById('word-synonym').value = '';
+            document.getElementById('word-antonym').value = '';
+        }
+
+        function renderWordList() {
+            const data = getSystemData();
+            const allWords = [
+                ...data.english.wordLibrary.textbook,
+                ...data.english.wordLibrary.teacher,
+                ...data.english.wordLibrary.reading
+            ];
+            document.getElementById('word-list').innerHTML = allWords.map(w => `
+                <div class="list-group-item">
+                    <strong>${w.word}</strong> ${w.phonetic} → ${w.meaning}
+                </div>
+            `).join('');
+        }
+
+        // ====================== 阅读管理 ======================
+        function addReading() {
+            const title = document.getElementById('reading-title').value;
+            const content = document.getElementById('reading-content').value;
+            if(!title || !content) {
+                alert('请填写标题和内容');
+                return;
+            }
+            const data = getSystemData();
+            data.english.readingLibrary.push({
+                id: Date.now(),
+                title,
+                content,
+                questions: [],
+                newWords: []
+            });
+            saveSystemData(data);
+            renderReadingList();
+            document.getElementById('reading-title').value = '';
+            document.getElementById('reading-content').value = '';
+        }
+
+        function renderReadingList() {
+            const data = getSystemData();
+            document.getElementById('reading-list').innerHTML = data.english.readingLibrary.map(r => `
+                <div class="list-group-item">
+                    <strong>${r.title}</strong>
+                </div>
+            `).join('');
+        }
+    </script>
 </body>
 </html>
